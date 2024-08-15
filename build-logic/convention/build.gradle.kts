@@ -33,5 +33,9 @@ gradlePlugin {
             id = "com.pingidentity.convention.centralPublish"
             implementationClass = "com.pingidentity.convention.MavenCentralPublishConventionPlugin"
         }
+        register("jacoco-reports") {
+            id = "com.pingidentity.convention.jacoco"
+            implementationClass = "com.pingidentity.convention.JacocoPlugin"
+        }
     }
 }

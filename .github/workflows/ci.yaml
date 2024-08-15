@@ -1,0 +1,37 @@
+#
+# Copyright (c) 2024. PingIdentity. All rights reserved.
+#
+# This software may be modified and distributed under the terms
+# of the MIT license. See the LICENSE file for details.
+#
+
+name: CI
+
+# Trigger on push or pull request
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, edited]
+
+  push:
+    branches:
+      - master
+      - develop
+
+permissions: write-all
+jobs:
+  # Build and run unit tests
+  build-and-test:
+    name: Build and test
+    uses: ./.github/workflows/build-and-test.yaml
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  # Run Mend CLI Scan
+  mend-cli-scan:
+    name: Mend CLI Scan
+    uses: ./.github/workflows/mend-cli-scan.yaml
+    secrets:
+      MEND_EMAIL: ${{ secrets.MEND_EMAIL }}
+      MEND_USER_KEY: ${{ secrets.MEND_USER_KEY }}
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
