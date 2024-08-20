@@ -27,6 +27,13 @@ jobs:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  # Run integration tests on emulators
+  integration-tests:
+    name: Integration tests
+    uses: ./.github/workflows/integration-tests.yaml
+    secrets:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
   # Run Mend CLI Scan
   mend-cli-scan:
     name: Mend CLI Scan
