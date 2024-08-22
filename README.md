@@ -1,3 +1,6 @@
+[![Build Status](https://github.com/ForgeRock/unified-sdk-android/actions/workflows/ci.yaml/badge.svg)](https://github.com/ForgeRock/unified-sdk-android/actions/workflows/ci.yaml)
+[![Coverage](https://codecov.io/gh/ForgeRock/unified-sdk-android/graph/badge.svg?token=1UYU8JMS8C)](https://codecov.io/gh/ForgeRock/unified-sdk-android)
+
 <div>
   <picture>
      <img src="https://www.pingidentity.com/content/dam/ping-6-2-assets/topnav-json-configs/Ping-Logo.svg" width="80" height="80"  alt=""/>
