@@ -19,20 +19,40 @@ on:
 
 permissions: write-all
 jobs:
+  # Create TestRail run
+  create-testrail-run:
+      name: Create TestRail Run
+      uses: ./.github/workflows/create-testrail-run.yaml
+      secrets:
+        TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+        TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+
   # Build and run unit tests
   build-and-test:
     name: Build and test
     uses: ./.github/workflows/build-and-test.yaml
+    needs: create-testrail-run
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+    with:
+      runs-on: ubuntu-latest
+      testrail-run-id: ${{needs.create-testrail-run.outputs.testrail-run-id}}
 
   # Run integration tests on emulators
   integration-tests:
     name: Integration tests
     uses: ./.github/workflows/integration-tests.yaml
+    needs: create-testrail-run
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+      TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+    with:
+      runs-on: ubuntu-latest
+      testrail-run-id: ${{needs.create-testrail-run.outputs.testrail-run-id}}
 
   # Run Mend CLI Scan
   mend-cli-scan:

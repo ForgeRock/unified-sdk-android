@@ -13,15 +13,22 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import androidx.test.core.app.ApplicationProvider
 import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import org.junit.rules.TestWatcher
 
 @RunWith(RobolectricTestRunner::class)
 class DataStorageTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
+
     private val context: Context by lazy { ApplicationProvider.getApplicationContext<Application>() }
 
     private val Context.dataStore: DataStore<Data?> by dataStore("test", DataStoreSerializer())

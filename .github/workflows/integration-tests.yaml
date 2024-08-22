@@ -13,9 +13,18 @@ on:
         description: Platform to execute on
         type: string
         default: ubuntu-latest
+      testrail-run-id:
+        description: TestRail Run ID
+        type: string
     secrets:
       SLACK_WEBHOOK:
         description: Slack Notifier Incoming Webhook
+        required: true
+      TESTRAIL_USERNAME:
+        description: TestRail username
+        required: true
+      TESTRAIL_API_KEY:
+        description: TestRail API key
         required: true
 jobs:
   integration-tests:
@@ -70,14 +79,23 @@ jobs:
           script: echo "Generated AVD snapshot for caching."
 
       # Execute all integration tests
-      - name: run tests
+      - name: Execute integration tests
+        env:
+          TESTRAIL_ENABLE: ${{vars.TESTRAIL_ENABLE}}
+          TESTRAIL_DEBUG: ${{vars.TESTRAIL_DEBUG}}
+          TESTRAIL_URL: ${{vars.TESTRAIL_URL}}
+          TESTRAIL_PROJECT_ID: ${{vars.TESTRAIL_PROJECT_ID}}
+          TESTRAIL_RUN_ID: ${{inputs.testrail-run-id}}
+          TESTRAIL_USERNAME: ${{secrets.TESTRAIL_USERNAME}}
+          TESTRAIL_API_KEY: ${{secrets.TESTRAIL_API_KEY}}
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew connectedCheck
+          pre-emulator-launch-script: export TESTRAIL_ENABLE=${{vars.TESTRAIL_ENABLE}} && export TESTRAIL_DEBUG=${{vars.TESTRAIL_DEBUG}} && export TESTRAIL_URL=${{vars.TESTRAIL_URL}} && export TESTRAIL_PROJECT_ID=${{vars.TESTRAIL_PROJECT_ID}} && export TESTRAIL_RUN_ID=${{inputs.testrail-run-id}} && export TESTRAIL_USERNAME=${{secrets.TESTRAIL_USERNAME}} && export TESTRAIL_API_KEY=${{secrets.TESTRAIL_API_KEY}}
+          script: ./gradlew --rerun-tasks connectedCheck
 
       # Publish test reports for the unit tests
       - name: Publish test results

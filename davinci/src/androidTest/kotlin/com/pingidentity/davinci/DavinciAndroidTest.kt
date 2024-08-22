@@ -22,8 +22,12 @@ import com.pingidentity.logger.Logger
 import com.pingidentity.orchestrate.Connector
 import com.pingidentity.orchestrate.Failure
 import com.pingidentity.orchestrate.Success
+import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -52,6 +56,10 @@ class DavinciAndroidTest {
     private lateinit var password: String
     private lateinit var verificationCode: String
 
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
+
     @BeforeTest
     fun setUp() = runTest {
         userFname = "E2E"
@@ -67,7 +75,7 @@ class DavinciAndroidTest {
         daVinci.user()?.logout()
     }
 
-    // C21274
+    @TestRailCase(21274)
     @Test
     fun loginSuccess() = runTest {
         var node = daVinci.start() // Return first Node
@@ -137,7 +145,7 @@ class DavinciAndroidTest {
         assertNull(daVinci.user())
     }
 
-    // C21275
+    @TestRailCase(21275)
     @Test
     fun loginFailure() = runTest {
         var node = daVinci.start() // Return first Node
@@ -157,7 +165,7 @@ class DavinciAndroidTest {
         assertNull(daVinci.user())
     }
 
-    // C21276
+    @TestRailCase(21276)
     @Test
     fun checkActiveSession() = runTest {
         var node = daVinci.start() // Return first Node
@@ -197,7 +205,7 @@ class DavinciAndroidTest {
         assertNull(daVinci.user())
     }
 
-    // C21253
+    @TestRailCase(21253)
     @Test
     fun userRegistrationSuccess() = runBlocking {
         var node = daVinci.start()
@@ -279,7 +287,7 @@ class DavinciAndroidTest {
         deleteUser(newUser, password)
     }
 
-    // C21269
+    @TestRailCase(21269)
     @Test
     fun userRegistrationFailureUserAlreadyExists() = runTest {
         var node = daVinci.start()
@@ -313,7 +321,7 @@ class DavinciAndroidTest {
         assertNull(daVinci.user())
     }
 
-    // C21270
+    @TestRailCase(21270)
     @Test
     fun userRegistrationFailureInvalidEmail() = runTest {
         var node = daVinci.start()
@@ -361,7 +369,7 @@ class DavinciAndroidTest {
         assertNull(daVinci.user())
     }
 
-    // C21272
+    @TestRailCase(21272)
     @Test
     fun userRegistrationFailureInvalidPassword() = runTest {
         var node = daVinci.start()
@@ -396,7 +404,7 @@ class DavinciAndroidTest {
         assertNull(daVinci.user())
     }
 
-    // C21273
+    @TestRailCase(21273)
     @Test
     fun userRegistrationFailureInvalidVerificationCode() = runBlocking {
         var node = daVinci.start()
@@ -449,7 +457,7 @@ class DavinciAndroidTest {
         deleteUser(newUser, password)
     }
 
-    // C21277
+    @TestRailCase(21277)
     @Test
     fun passwordRecovery() = runBlocking {
         val newUser = userFname + System.currentTimeMillis() + "@example.com"
@@ -580,7 +588,7 @@ class DavinciAndroidTest {
         deleteUser(newUser, "New$password")
     }
 
-    // C21278
+    @TestRailCase(21278)
     @Test
     fun passwordReset() = runBlocking {
         val newUser = userFname + System.currentTimeMillis() + "@example.com"
