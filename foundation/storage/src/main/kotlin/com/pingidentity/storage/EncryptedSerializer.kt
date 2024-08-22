@@ -41,7 +41,7 @@ inline fun <reified T : Any> EncryptedSerializer(
         override suspend fun readFrom(input: InputStream): T? {
             return if (input.isNotEmpty()) {
                 val result = encryptor.decrypt(input.readBytes())
-                return if (result.isEmpty()) null else Json.decodeFromString(String(result))
+                return if (result.isEmpty()) null else json.decodeFromString(String(result))
             } else {
                 null
             }
@@ -62,7 +62,7 @@ inline fun <reified T : Any> EncryptedSerializer(
                 //Do we want to ignore it or throw it?
                 output.write(
                     encryptor.encrypt(
-                        Json.encodeToString(serializer, it).toByteArray()
+                        json.encodeToString(serializer, it).toByteArray()
                     )
                 )
             }

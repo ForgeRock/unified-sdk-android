@@ -52,7 +52,7 @@ class EncryptedSharedPreferences<T : @Serializable Any>(
      * @param item The item to save.
      */
     override suspend fun save(item: T) {
-        sharedPreferences.edit().putString(key, Json.encodeToString(serializer, item)).apply()
+        sharedPreferences.edit().putString(key, json.encodeToString(serializer, item)).apply()
     }
 
     /**
@@ -62,7 +62,7 @@ class EncryptedSharedPreferences<T : @Serializable Any>(
      */
     override suspend fun get(): T? {
         return sharedPreferences.getString(key, null)?.let {
-            return Json.decodeFromString(serializer, it)
+            return json.decodeFromString(serializer, it)
         }
     }
 

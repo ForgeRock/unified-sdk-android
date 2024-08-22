@@ -76,7 +76,7 @@ inline fun <reified T : Any> DataStoreSerializer(): Serializer<T?> {
          */
         override suspend fun readFrom(input: InputStream): T? {
             return if (input.isNotEmpty()) {
-                Json.decodeFromStream(input)
+                json.decodeFromStream(input)
             } else {
                 null
             }
@@ -92,7 +92,7 @@ inline fun <reified T : Any> DataStoreSerializer(): Serializer<T?> {
             t: T?,
             output: OutputStream,
         ) {
-            if (t != null) Json.encodeToStream(t, output)
+            if (t != null) json.encodeToStream(t, output)
         }
 
         /**

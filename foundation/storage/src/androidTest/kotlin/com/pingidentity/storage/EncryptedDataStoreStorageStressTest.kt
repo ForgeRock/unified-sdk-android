@@ -30,7 +30,7 @@ import kotlin.test.Test
 class EncryptedDataStoreStorageStressTest {
 
     private val applicationContext: Context by lazy { ApplicationProvider.getApplicationContext<Application>() }
-    private val Context.dataStore: DataStore<Data?> by dataStore("encrypted", EncryptedSerializer(
+    private val Context.dataStore: DataStore<Data?> by dataStore(this.javaClass.simpleName, EncryptedSerializer(
         SecretKeyEncryptor {
             keyAlias = EncryptedDataStoreStorageStressTest::class.java.simpleName
         }

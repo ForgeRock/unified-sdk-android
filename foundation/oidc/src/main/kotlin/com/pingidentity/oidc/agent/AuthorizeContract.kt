@@ -29,6 +29,9 @@ private const val CODE = "code"
  */
 class AuthorizeContract :
     ActivityResultContract<OidcConfig<BrowserConfig>, Result<AuthorizationResponse>>() {
+
+    private lateinit var service: AuthorizationService
+
     /**
      * Creates an intent for the authorization request.
      *
@@ -64,7 +67,7 @@ class AuthorizeContract :
         val request = builder.build()
         val configBuilder = AppAuthConfiguration.Builder()
         input.config.appAuthConfiguration(configBuilder)
-        val service = AuthorizationService(context, configBuilder.build())
+        service = AuthorizationService(context, configBuilder.build())
 
         val intentBuilder: CustomTabsIntent.Builder =
             service.createCustomTabsIntentBuilder(request.toUri())
@@ -83,6 +86,8 @@ class AuthorizeContract :
         resultCode: Int,
         intent: Intent?,
     ): Result<AuthorizationResponse> {
+        service.dispose()
+
         intent?.let { i ->
             val error = AuthorizationException.fromIntent(i)
             error?.let {

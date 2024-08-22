@@ -25,6 +25,9 @@ import net.openid.appauth.EndSessionResponse
  */
 class EndSessionContract :
     ActivityResultContract<Pair<String, OidcConfig<BrowserConfig>>, Result<EndSessionResponse>>() {
+
+    private lateinit var service: AuthorizationService
+
     /**
      * Creates an intent for the end session request.
      * @param context The context to use for creating the intent.
@@ -52,8 +55,8 @@ class EndSessionContract :
         val configBuilder = AppAuthConfiguration.Builder()
         input.second.config.appAuthConfiguration(configBuilder)
 
-        val authService = AuthorizationService(context, configBuilder.build())
-        return authService.getEndSessionRequestIntent(endSessionRequest)
+        service = AuthorizationService(context, configBuilder.build())
+        return service.getEndSessionRequestIntent(endSessionRequest)
     }
 
     /**
@@ -66,6 +69,7 @@ class EndSessionContract :
         resultCode: Int,
         intent: Intent?,
     ): Result<EndSessionResponse> {
+        service.dispose()
         intent?.let { i ->
             val resp = EndSessionResponse.fromIntent(i)
             resp?.let { return Result.success(it) }

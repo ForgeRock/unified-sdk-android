@@ -36,9 +36,9 @@ dependencies {
     implementation(project(":foundation:android"))
     implementation(project(":foundation:storage"))
 
+    //Access HttpClient object
     implementation(libs.ktor.client.core)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.test.runner)
 
     testImplementation(project(":foundation:testrail"))
     testImplementation(libs.kotlin.test)
@@ -47,7 +47,6 @@ dependencies {
 
     androidTestImplementation(libs.kotlin.test)
     androidTestImplementation(libs.kotlinx.coroutines.test)
-    androidTestImplementation(libs.kotlin.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.runner)
 }

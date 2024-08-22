@@ -15,6 +15,7 @@ import com.pingidentity.oidc.OidcError.AuthorizeError
 import com.pingidentity.oidc.OidcError.NetworkError
 import com.pingidentity.oidc.OidcError.Unknown
 import com.pingidentity.oidc.exception.AuthorizeException
+import kotlinx.coroutines.CancellationException
 import java.io.IOException
 
 /**
@@ -57,6 +58,7 @@ inline fun <R> catch(block: () -> R): Result<R, OidcError> {
         Result.Success(block())
     } catch (e: Throwable) {
         when (e) {
+            is CancellationException -> throw e
             is ApiException -> Failure(ApiError(e.status, e.message ?: ""))
             is AuthorizeException -> Failure(AuthorizeError(e))
             is IOException -> Failure(NetworkError(e))

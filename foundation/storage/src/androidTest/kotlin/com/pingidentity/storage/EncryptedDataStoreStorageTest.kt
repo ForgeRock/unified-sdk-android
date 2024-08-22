@@ -32,7 +32,7 @@ import kotlin.test.assertNull
 class EncryptedDataStoreStorageTest {
 
     private val applicationContext: Context by lazy { ApplicationProvider.getApplicationContext<Application>() }
-    private val Context.dataStore: DataStore<Data?> by dataStore("encrypted", EncryptedSerializer(
+    private val Context.dataStore: DataStore<Data?> by dataStore(this.javaClass.simpleName, EncryptedSerializer(
         SecretKeyEncryptor {
             logger = Logger.CONSOLE
             keyAlias = EncryptedDataStoreStorageTest::class.java.simpleName
