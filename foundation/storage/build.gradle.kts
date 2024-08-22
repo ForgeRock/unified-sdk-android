@@ -24,6 +24,8 @@ dependencies {
 
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.datastore.core)
+    testImplementation(project(":foundation:testrail"))
+    androidTestImplementation(project(":foundation:testrail"))
 
     compileOnly(libs.androidx.datastore.preferences) //Make it optional for developer
     compileOnly(libs.androidx.security.crypto.ktx) //Make it optional for developer

@@ -14,6 +14,7 @@ import androidx.datastore.dataStore
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
+import com.pingidentity.testrail.TestRailCase
 import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
 import kotlin.test.AfterTest
@@ -35,6 +36,7 @@ class DataStoreStorageTest {
             context.dataStore.updateData { null }
         }
 
+    @TestRailCase(21257, 21611)
     @Test
     fun testDataStore() =
         runTest(timeout = Duration.INFINITE) {

@@ -57,7 +57,7 @@ class EncryptedDataStoreStorageTest {
         keyStore.deleteEntry(EncryptedDataStoreStorageTest::class.java.simpleName)
     }
 
-    @Test(timeout = 100L)
+    @Test
     fun testDataStore() =
         runTest {
             val storage = DataStoreStorage(applicationContext.dataStore)

@@ -12,6 +12,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
+import com.pingidentity.testrail.TestRailCase
 import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
 import kotlin.test.AfterTest
@@ -32,6 +33,7 @@ class EncryptedStorageTest {
             storage.delete()
         }
 
+    @TestRailCase(21628, 21629)
     @Test
     fun testDataStore() =
         runTest {
@@ -42,6 +44,7 @@ class EncryptedStorageTest {
             assertEquals("test", storedData.b)
         }
 
+    @TestRailCase(21630, 21631)
     @Test
     fun testMultipleData() =
         runTest {
@@ -52,6 +55,7 @@ class EncryptedStorageTest {
             assertEquals(dataList, storedData)
         }
 
+    @TestRailCase(21632)
     @Test
     fun testDeleteData() =
         runTest {
@@ -63,6 +67,7 @@ class EncryptedStorageTest {
             assertEquals(null, storedData)
         }
 
+    @TestRailCase(21633)
     @Test
     fun testDifferentDataObjectsWithSameStorage() =
         runTest {
@@ -84,5 +89,14 @@ class EncryptedStorageTest {
             storageData.delete()
             assertNull(storageData.get())
             assertNotNull(storageData2.get())
+        }
+
+    @TestRailCase(21628, 21629)
+    @Test
+    fun testGettingDataError() =
+        runTest {
+            val storage = EncryptedStorage<Data>(filename = "2", context = context)
+            val storedData = storage.get()
+            assertNull(storedData)
         }
 }

@@ -15,6 +15,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.pingidentity.storage.encrypt.SecretKeyEncryptor
+import com.pingidentity.testrail.TestRailCase
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -54,6 +55,7 @@ class EncryptedDataStoreStorageStressTest {
         keyStore.deleteEntry(EncryptedDataStoreStorageStressTest::class.java.simpleName)
     }
 
+    @TestRailCase(21635)
     @Test
     fun testDataStoreStress() = runBlocking {
         val storage = DataStoreStorage(applicationContext.dataStore)

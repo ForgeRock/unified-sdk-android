@@ -14,6 +14,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.test.core.app.ApplicationProvider
+import com.pingidentity.testrail.TestRailCase
 import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -37,6 +38,7 @@ class DataStoragePreferencesTest {
             }
         }
 
+    @TestRailCase(21616, 21617)
     @Test
     fun testDataStore() =
         runTest {
@@ -47,6 +49,7 @@ class DataStoragePreferencesTest {
             assertEquals("test", storedData.b)
         }
 
+    @TestRailCase(21618, 21619)
     @Test
     fun testMultipleData() =
         runTest {
@@ -57,6 +60,7 @@ class DataStoragePreferencesTest {
             assertEquals(dataList, storedData)
         }
 
+    @TestRailCase(21620)
     @Test
     fun testDeleteData() =
         runTest {
@@ -68,6 +72,7 @@ class DataStoragePreferencesTest {
             assertEquals(null, storedData)
         }
 
+    @TestRailCase(21621)
     @Test
     fun testDifferentDataObjectsWithSameDataStore() =
         runTest {

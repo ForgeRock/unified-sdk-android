@@ -13,6 +13,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.pingidentity.storage.encrypt.SecretKeyEncryptor
+import com.pingidentity.testrail.TestRailCase
 import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
 import java.security.KeyStore
@@ -43,6 +44,7 @@ class SecretKeyEncryptorTest {
         keyStore.deleteEntry(SecretKeyEncryptorTest::class.java.simpleName)
     }
 
+    @TestRailCase(21634)
     @Test
     fun testEncryptDecrypt() = runTest {
         val encryptor = SecretKeyEncryptor {
