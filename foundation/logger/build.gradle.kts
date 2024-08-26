@@ -23,5 +23,20 @@ android {
 //apply("../../gradle/publish-package.gradle")
 
 dependencies {
+    implementation(libs.ktor.client.core)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.test.runner)
+
+    testImplementation(project(":foundation:testrail"))
     testImplementation(libs.kotlin.test)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.ktor.client.mock)
+
+    androidTestImplementation(libs.kotlin.test)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.kotlin.test)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(project(":foundation:testrail"))
+    androidTestImplementation(project(":foundation:android"))
 }

@@ -8,7 +8,10 @@
 package com.pingidentity.storage
 
 import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -16,6 +19,10 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class MemoryStorageTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
+
     @AfterTest
     fun tearDown() =
         runTest {

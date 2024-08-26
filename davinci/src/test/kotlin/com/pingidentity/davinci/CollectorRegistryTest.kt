@@ -12,15 +12,21 @@ import com.pingidentity.davinci.collector.PasswordCollector
 import com.pingidentity.davinci.collector.SubmitCollector
 import com.pingidentity.davinci.collector.TextCollector
 import com.pingidentity.davinci.plugin.CollectorFactory
+import com.pingidentity.testrail.TestRailWatcher
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class CollectorRegistryTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
 
     private lateinit var collectorRegistry: CollectorRegistry
 

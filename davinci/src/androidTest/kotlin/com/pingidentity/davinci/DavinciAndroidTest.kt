@@ -19,6 +19,7 @@ import com.pingidentity.davinci.module.name
 import com.pingidentity.davinci.plugin.collectors
 import com.pingidentity.logger.CONSOLE
 import com.pingidentity.logger.Logger
+import com.pingidentity.logger.STANDARD
 import com.pingidentity.orchestrate.Connector
 import com.pingidentity.orchestrate.Failure
 import com.pingidentity.orchestrate.Success
@@ -38,7 +39,7 @@ import kotlin.test.assertTrue
 @SmallTest
 class DavinciAndroidTest {
     private var daVinci: DaVinci =  DaVinci {
-        logger = Logger.CONSOLE
+        logger = Logger.STANDARD
 
         module(Oidc) {
             clientId = "a9cf6b4c-8669-4dee-8b97-7c703752c04f"

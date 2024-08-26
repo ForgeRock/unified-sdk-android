@@ -28,6 +28,7 @@ import com.pingidentity.orchestrate.module.Cookie
 import com.pingidentity.orchestrate.module.Cookies
 import com.pingidentity.orchestrate.module.CustomHeader
 import com.pingidentity.storage.MemoryStorage
+import com.pingidentity.testrail.TestRailWatcher
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -39,6 +40,8 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -49,6 +52,9 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class DaVinciTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
 
     private lateinit var mockEngine: MockEngine
 

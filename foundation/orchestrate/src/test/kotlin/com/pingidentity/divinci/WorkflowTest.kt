@@ -20,6 +20,7 @@ import com.pingidentity.orchestrate.OverrideMode.IGNORE
 import com.pingidentity.orchestrate.Request
 import com.pingidentity.orchestrate.Success
 import com.pingidentity.orchestrate.Workflow
+import com.pingidentity.testrail.TestRailWatcher
 import com.pingidentity.utils.PingDsl
 import com.pingidentity.utils.Result
 import io.ktor.client.HttpClient
@@ -32,6 +33,8 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.put
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.IllegalStateException
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -39,6 +42,10 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class WorkflowTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
+
     private lateinit var mockEngine: MockEngine
 
     @PingDsl

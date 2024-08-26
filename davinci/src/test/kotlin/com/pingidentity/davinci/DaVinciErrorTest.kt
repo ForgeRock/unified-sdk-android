@@ -30,11 +30,17 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 import com.pingidentity.orchestrate.Error
 import com.pingidentity.orchestrate.Failure
+import com.pingidentity.testrail.TestRailWatcher
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.BeforeTest
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
 class DaVinciErrorTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
 
     private lateinit var mockEngine: MockEngine
 

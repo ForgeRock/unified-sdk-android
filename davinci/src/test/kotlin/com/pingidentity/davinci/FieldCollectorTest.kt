@@ -7,12 +7,18 @@
 
 import com.pingidentity.testrail.TestRailCase
 import com.pingidentity.davinci.collector.FieldCollector
+import com.pingidentity.testrail.TestRailWatcher
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class FieldCollectorTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
 
     @TestRailCase(21257)
     @Test

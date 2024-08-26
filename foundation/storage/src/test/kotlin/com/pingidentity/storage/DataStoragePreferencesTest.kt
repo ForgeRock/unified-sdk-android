@@ -15,7 +15,10 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.test.core.app.ApplicationProvider
 import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import kotlin.test.AfterTest
@@ -26,6 +29,10 @@ import kotlin.test.assertNull
 
 @RunWith(RobolectricTestRunner::class)
 class DataStoragePreferencesTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
+
     private val context: Context by lazy { ApplicationProvider.getApplicationContext<Application>() }
 
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")

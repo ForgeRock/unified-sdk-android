@@ -78,9 +78,21 @@ jobs:
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
 
+      # Update the testrail integration configuration (this is a hack...)
+      - name: Update the testrail integration configuration
+        run: |
+          cat foundation/testrail/src/main/kotlin/com/pingidentity/testrail/TestRailClientConfig.kt
+          sed -i -e "s/\"TESTRAIL_ENABLE\", \".*\"/\"TESTRAIL_ENABLE\", \"${{vars.TESTRAIL_ENABLE}}\"/g" foundation/testrail/src/main/kotlin/com/pingidentity/testrail/TestRailClientConfig.kt
+          sed -i -e "s/\"TESTRAIL_DEBUG\", \".*\"/\"TESTRAIL_DEBUG\", \"${{vars.TESTRAIL_DEBUG}}\"/g" foundation/testrail/src/main/kotlin/com/pingidentity/testrail/TestRailClientConfig.kt
+          sed -i -e "s/\"TESTRAIL_PROJECT_ID\", \".*\"/\"TESTRAIL_PROJECT_ID\", \"${{vars.TESTRAIL_PROJECT_ID}}\"/g" foundation/testrail/src/main/kotlin/com/pingidentity/testrail/TestRailClientConfig.kt
+          sed -i -e "s/\"TESTRAIL_RUN_ID\", \".*\"/\"TESTRAIL_RUN_ID\", \"${{inputs.testrail-run-id}}\"/g" foundation/testrail/src/main/kotlin/com/pingidentity/testrail/TestRailClientConfig.kt
+          sed -i -e "s/\"TESTRAIL_USERNAME\", \".*\"/\"TESTRAIL_USERNAME\", \"${{secrets.TESTRAIL_USERNAME}}\"/g" foundation/testrail/src/main/kotlin/com/pingidentity/testrail/TestRailClientConfig.kt
+          sed -i -e "s/\"TESTRAIL_API_KEY\", \".*\"/\"TESTRAIL_API_KEY\", \"${{secrets.TESTRAIL_API_KEY}}\"/g" foundation/testrail/src/main/kotlin/com/pingidentity/testrail/TestRailClientConfig.kt
+
       # Execute all integration tests
       - name: Execute integration tests
         env:
+          # These environment variables don't work with the emulator-runner action for some reason
           TESTRAIL_ENABLE: ${{vars.TESTRAIL_ENABLE}}
           TESTRAIL_DEBUG: ${{vars.TESTRAIL_DEBUG}}
           TESTRAIL_URL: ${{vars.TESTRAIL_URL}}
@@ -94,7 +106,6 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          pre-emulator-launch-script: export TESTRAIL_ENABLE=${{vars.TESTRAIL_ENABLE}} && export TESTRAIL_DEBUG=${{vars.TESTRAIL_DEBUG}} && export TESTRAIL_URL=${{vars.TESTRAIL_URL}} && export TESTRAIL_PROJECT_ID=${{vars.TESTRAIL_PROJECT_ID}} && export TESTRAIL_RUN_ID=${{inputs.testrail-run-id}} && export TESTRAIL_USERNAME=${{secrets.TESTRAIL_USERNAME}} && export TESTRAIL_API_KEY=${{secrets.TESTRAIL_API_KEY}}
           script: ./gradlew --rerun-tasks connectedCheck
 
       # Publish test reports for the unit tests

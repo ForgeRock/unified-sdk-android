@@ -40,7 +40,7 @@ class DataStorageTest {
             context.dataStore.updateData { null }
         }
 
-    @TestRailCase(21257, 21611)
+    @TestRailCase(21605, 21611)
     @Test
     fun testDataStore() =
         runTest {
