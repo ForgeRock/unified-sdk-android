@@ -7,7 +7,6 @@
 
 package com.pingidentity.divinci
 
-import com.pingidentity.utils.Result
 import com.pingidentity.orchestrate.Connector
 import com.pingidentity.orchestrate.EmptySession
 import com.pingidentity.orchestrate.Module
@@ -17,6 +16,8 @@ import com.pingidentity.orchestrate.Workflow
 import com.pingidentity.orchestrate.module.Cookie
 import com.pingidentity.orchestrate.module.Cookies
 import com.pingidentity.storage.MemoryStorage
+import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -26,6 +27,8 @@ import io.ktor.utils.io.ByteReadChannel
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -33,9 +36,13 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class CookieModuleTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
 
     private lateinit var mockEngine: MockEngine
 
+    @TestRailCase(22141)
     @Test
     fun `test cookie from response`() = runTest {
         mockEngine =
@@ -78,6 +85,7 @@ class CookieModuleTest {
 
     }
 
+    @TestRailCase(22142)
     @Test
     fun `test cookie storage from response`() = runTest {
         mockEngine =
@@ -119,6 +127,7 @@ class CookieModuleTest {
         assertEquals(1, memory.get()!!.size)
     }
 
+    @TestRailCase(22143)
     @Test
     fun `test cookie inject to request and signoff`() = runTest {
         var success = false
@@ -196,6 +205,7 @@ class CookieModuleTest {
 
     }
 
+    @TestRailCase(22144)
     @Test
     fun `test expired cookie from response`() = runTest {
         mockEngine =
@@ -237,6 +247,4 @@ class CookieModuleTest {
         assertEquals(1, memory.get()!!.size)
 
     }
-
-
 }

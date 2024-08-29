@@ -489,7 +489,7 @@ class WorkflowTest {
         assertEquals(10, workflow.sharedContext.getValue<Int>("count"))
     }
 
-    @TestRailCase(21299)
+    @TestRailCase(21300)
     @Test
     fun `test init state function throw exception`() = runTest {
         val initFailed = Module.of {
@@ -507,7 +507,7 @@ class WorkflowTest {
         assertTrue(node.cause is IllegalStateException)
     }
 
-    @TestRailCase(21300)
+    @TestRailCase(22119)
     @Test
     fun `test start state function throw exception`() = runTest {
         val module = Module.of {
@@ -695,6 +695,7 @@ class WorkflowTest {
         assertTrue(node.cause is IllegalStateException)
     }
 
+    @TestRailCase(22120)
     @Test
     fun `Test execution failure`() = runTest {
 
@@ -723,6 +724,7 @@ class WorkflowTest {
         assertTrue(failure.input.isEmpty())
     }
 
+    @TestRailCase(22121)
     @Test
     fun `signOff should return success result when no exceptions occur`() = runTest {
         val mockHttpClient = HttpClient(MockEngine { respond("") })
@@ -735,6 +737,7 @@ class WorkflowTest {
         assertTrue(result.isSuccess)
     }
 
+    @TestRailCase(22122)
     @Test
     fun `signOff should return failure result when exception occurs`() = runTest {
         val mockHttpClient = HttpClient(MockEngine { throw IllegalStateException("Sign off failed") })
@@ -748,6 +751,4 @@ class WorkflowTest {
         assertTrue((result).exceptionOrNull() is IllegalStateException)
         assertEquals("Sign off failed", result.exceptionOrNull()!!.message)
     }
-
-
 }

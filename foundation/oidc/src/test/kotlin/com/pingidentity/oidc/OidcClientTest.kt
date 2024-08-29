@@ -12,6 +12,8 @@ import com.pingidentity.utils.Result.Success
 import com.pingidentity.oidc.agent.BrowserConfig
 import com.pingidentity.oidc.agent.browser
 import com.pingidentity.storage.MemoryStorage
+import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -25,6 +27,8 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -44,6 +48,10 @@ class TestAgent(agent: Agent<BrowserConfig>) : Agent<BrowserConfig> by agent {
 class OidcClientTest {
     private lateinit var mockEngine: MockEngine
     private lateinit var testAgent: Agent<BrowserConfig>
+
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
 
     @BeforeTest
     fun setUp() {
@@ -92,6 +100,7 @@ class OidcClientTest {
         mockEngine.close()
     }
 
+    @TestRailCase(22084)
     @Test
     fun `failed to lookup discovery endpoint`() =
         runTest {
@@ -130,6 +139,7 @@ class OidcClientTest {
             )
         }
 
+    @TestRailCase(22085)
     @Test
     fun `accessToken should return cached token if not expired`() =
         runTest {
@@ -157,6 +167,7 @@ class OidcClientTest {
             assertEquals(2, mockEngine.requestHistory.size)
         }
 
+    @TestRailCase(22086)
     @Test
     fun `accessToken should refresh token if expired`() =
         runTest {
@@ -224,6 +235,7 @@ class OidcClientTest {
             assertNull(tokenInStorage)
         }
 
+    @TestRailCase(22087)
     @Test
     fun `userinfo should return user info`() =
         runTest {
@@ -243,6 +255,7 @@ class OidcClientTest {
             assertEquals("test-name", result.value["name"]?.jsonPrimitive?.content)
         }
 
+    @TestRailCase(22088)
     @Test
     fun `endSession should end session and revoke token`() =
         runTest {
@@ -283,6 +296,7 @@ class OidcClientTest {
             assertTrue(signOffCalled, "The /signoff endpoint was not called.")
         }
 
+    @TestRailCase(22089)
     @Test
     fun `endSession with redirect response`() =
         runTest {
@@ -334,6 +348,7 @@ class OidcClientTest {
 
         }
 
+    @TestRailCase(22090)
     @Test
     fun `endSession redirect response with error`() =
         runTest {
@@ -386,6 +401,7 @@ class OidcClientTest {
 
         }
 
+    @TestRailCase(22091)
     @Test
     fun `failed to retrieve access token`() =
         runTest {
@@ -425,6 +441,7 @@ class OidcClientTest {
             assertEquals(HttpStatusCode.BadRequest.value, (result.value as OidcError.ApiError).code)
         }
 
+    @TestRailCase(22092)
     @Test
     fun `failed to inject access token to userinfo`() =
         runTest {
@@ -464,6 +481,7 @@ class OidcClientTest {
             assertEquals(HttpStatusCode.BadRequest.value, (result.value as OidcError.ApiError).code)
         }
 
+    @TestRailCase(22093)
     @Test
     fun `failed to retrieve userinfo`() =
         runTest {
@@ -510,6 +528,7 @@ class OidcClientTest {
             )
         }
 
+    @TestRailCase(22094)
     @Test
     fun `failed to refresh token after token expired`() =
         runTest(timeout = 100.toDuration(DurationUnit.MINUTES)) {

@@ -18,6 +18,8 @@ import com.pingidentity.logger.Logger
 import com.pingidentity.logger.Standard
 import com.pingidentity.storage.MemoryStorage
 import com.pingidentity.storage.StorageDelegate
+import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -27,6 +29,8 @@ import io.ktor.http.headersOf
 import io.ktor.utils.io.ByteReadChannel
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import kotlin.test.BeforeTest
@@ -38,6 +42,10 @@ import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
 class OidcClientConfigTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
+
     private val context: Context by lazy { ApplicationProvider.getApplicationContext<Application>() }
 
     @BeforeTest
@@ -45,6 +53,7 @@ class OidcClientConfigTest {
         ContextProvider.init(context)
     }
 
+    @TestRailCase(22079)
     @Test
     fun `init should set openId when not initialized`() =
         runTest {
@@ -96,6 +105,7 @@ class OidcClientConfigTest {
             )
         }
 
+    @TestRailCase(22118)
     @Test
     fun `init should throw exception when discovery fails`(): Unit =
         runTest {
@@ -119,6 +129,7 @@ class OidcClientConfigTest {
             }
         }
 
+    @TestRailCase(22080)
     @Test
     fun `plusAssign should copy all properties from other config`() {
         val oidcClientConfig = OidcClientConfig()
@@ -162,6 +173,7 @@ class OidcClientConfigTest {
         assertEquals(otherConfig.httpClient, oidcClientConfig.httpClient)
     }
 
+    @TestRailCase(22081)
     @Test
     fun `clone should create a new instance with same properties`() {
         val oidcClientConfig =
@@ -204,6 +216,7 @@ class OidcClientConfigTest {
         assertEquals(oidcClientConfig.httpClient, clonedConfig.httpClient)
     }
 
+    @TestRailCase(22082)
     @Test
     fun `scope should add provided scope to scopes set`() {
         val oidcClientConfig = OidcClientConfig()
@@ -214,6 +227,7 @@ class OidcClientConfigTest {
         assertTrue { oidcClientConfig.scopes.contains(scope) }
     }
 
+    @TestRailCase(22083)
     @Test
     fun `httpclient should be initialized`() = runTest {
         val oidcClientConfig = OidcClientConfig().apply {

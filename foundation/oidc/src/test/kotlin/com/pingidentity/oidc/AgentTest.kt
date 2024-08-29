@@ -9,8 +9,12 @@ package com.pingidentity.oidc
 
 import com.pingidentity.oidc.exception.AuthorizeException
 import com.pingidentity.storage.MemoryStorage
+import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -18,6 +22,11 @@ import kotlin.test.assertFalse
 
 class AgentTest {
 
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
+
+    @TestRailCase(22077)
     @Test
     fun `endSession should always return false`() = runTest {
         val oidcClientConfig = OidcClientConfig().apply {
@@ -32,6 +41,7 @@ class AgentTest {
         assertFalse(result)
     }
 
+    @TestRailCase(22078)
     @Test
     fun `authorize should always throw AuthorizeException`() = runTest {
         val oidcClientConfig = OidcClientConfig().apply {

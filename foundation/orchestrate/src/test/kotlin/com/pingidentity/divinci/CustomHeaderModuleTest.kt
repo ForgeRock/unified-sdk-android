@@ -9,6 +9,8 @@ package com.pingidentity.divinci
 
 import com.pingidentity.orchestrate.Workflow
 import com.pingidentity.orchestrate.module.CustomHeader
+import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -16,14 +18,20 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.headers
 import io.ktor.utils.io.ByteReadChannel
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class CustomHeaderModuleTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
 
     private lateinit var mockEngine: MockEngine
 
+    @TestRailCase(22140)
     @Test
     fun `Test custom header added to request`() = runTest {
         mockEngine = MockEngine { request ->
