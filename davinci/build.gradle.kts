@@ -25,6 +25,13 @@ android {
     testVariants.all {
         this.mergedFlavor.manifestPlaceholders["appAuthRedirectScheme"] = "com.pingidentity.demo"
     }
+
+    buildTypes {
+        debug {
+            enableAndroidTestCoverage = true
+            enableUnitTestCoverage = true
+        }
+    }
 }
 
 dependencies {

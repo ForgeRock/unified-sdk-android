@@ -20,6 +20,9 @@ on:
       SLACK_WEBHOOK:
         description: Slack Notifier Incoming Webhook
         required: true
+      CODECOV_TOKEN:
+        description: Codecov token
+        required: true
       TESTRAIL_USERNAME:
         description: TestRail username
         required: true
@@ -106,7 +109,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew --rerun-tasks connectedCheck
+          script: ./gradlew --rerun-tasks connectedDebugAndroidTestCoverage --stacktrace --no-daemon
 
       # Publish test reports for the unit tests
       - name: Publish test results
@@ -119,3 +122,16 @@ jobs:
           list-tests: 'all'
           fail-on-error: 'true'
           reporter: java-junit
+
+      # Collect all coverage report files
+      - name: Find all coverage report files from all modules
+        run: |
+          echo "COVERAGE_REPORTS=$(echo $(printf '%s,' $(find . | grep test-coverage.xml)))" >> $GITHUB_ENV
+
+      # Upload code coverage report to Codecov
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.5.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ${{ env.COVERAGE_REPORTS }}
+          flags: integration-tests

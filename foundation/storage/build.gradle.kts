@@ -16,6 +16,13 @@ plugins {
 
 android {
     namespace = "com.pingidentity.storage"
+
+    buildTypes {
+        debug {
+            enableAndroidTestCoverage = true
+            enableUnitTestCoverage = true
+        }
+    }
 }
 
 dependencies {

@@ -17,6 +17,12 @@ plugins {
 
 android {
     namespace = "com.pingidentity.logger"
+    buildTypes {
+        debug {
+            enableAndroidTestCoverage = true
+            enableUnitTestCoverage = true
+        }
+    }
 }
 
 //ext["ARTIFACT_ID"] = "logger"
@@ -28,6 +34,7 @@ dependencies {
     implementation(libs.androidx.test.runner)
 
     testImplementation(project(":foundation:testrail"))
+    testImplementation(project(":foundation:android"))
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.ktor.client.mock)

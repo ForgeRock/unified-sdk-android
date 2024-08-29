@@ -48,6 +48,7 @@ jobs:
     needs: create-testrail-run
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
       TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
     with:
