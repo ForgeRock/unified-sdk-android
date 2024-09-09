@@ -6,7 +6,7 @@
  */
 
 import com.pingidentity.davinci.collector.FieldCollector
-import com.pingidentity.davinci.collector.FlowCollector
+import com.pingidentity.davinci.collector.TextCollector
 import com.pingidentity.testrail.TestRailCase
 import com.pingidentity.testrail.TestRailWatcher
 import kotlinx.serialization.json.buildJsonObject
@@ -16,46 +16,46 @@ import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.rules.TestWatcher
 
-class FlowCollectorTest {
+class TextCollectorTest {
 
     @JvmField
     @Rule
     val watcher: TestWatcher = TestRailWatcher
 
-    @TestRailCase(21258)
+    @TestRailCase(22555)
     @Test
     fun testInitialization() {
-        val flowCollector = FlowCollector()
-        assertNotNull(flowCollector)
+        val textCollector = TextCollector()
+        assertNotNull(textCollector)
     }
 
-    @TestRailCase(22145)
+    @TestRailCase(22556)
     @Test
     fun testInheritance() {
-        val flowCollector = FlowCollector()
-        assertTrue(flowCollector is FieldCollector)
+        val textCollector = TextCollector()
+        assertTrue(textCollector is FieldCollector)
     }
 
-    @TestRailCase(22146)
+    @TestRailCase(22557)
     @Test
     fun `should initialize key and label from JsonObject`() {
-        val flowCollector = FlowCollector()
+        val textCollector = TextCollector()
         val jsonObject = buildJsonObject {
             put("key", "testKey")
             put("label", "testLabel")
         }
 
-        flowCollector.init(jsonObject)
+        textCollector.init(jsonObject)
 
-        kotlin.test.assertEquals("testKey", flowCollector.key)
-        kotlin.test.assertEquals("testLabel", flowCollector.label)
+        kotlin.test.assertEquals("testKey", textCollector.key)
+        kotlin.test.assertEquals("testLabel", textCollector.label)
     }
 
-    @TestRailCase(22147)
+    @TestRailCase(22558)
     @Test
     fun `should return value when value is set`() {
-        val flowCollector = FlowCollector()
-        flowCollector.value = "test"
-        kotlin.test.assertEquals("test", flowCollector.value)
+        val textCollector = TextCollector()
+        textCollector.value = "test"
+        kotlin.test.assertEquals("test", textCollector.value)
     }
 }

@@ -17,7 +17,6 @@ import com.pingidentity.davinci.module.Oidc
 import com.pingidentity.davinci.module.description
 import com.pingidentity.davinci.module.name
 import com.pingidentity.davinci.plugin.collectors
-import com.pingidentity.logger.CONSOLE
 import com.pingidentity.logger.Logger
 import com.pingidentity.logger.STANDARD
 import com.pingidentity.orchestrate.Connector

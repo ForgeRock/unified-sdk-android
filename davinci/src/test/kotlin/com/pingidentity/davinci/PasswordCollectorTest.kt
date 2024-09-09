@@ -8,11 +8,20 @@
 package com.pingidentity.davinci
 
 import com.pingidentity.davinci.collector.PasswordCollector
+import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class PasswordCollectorTest {
 
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
+
+    @TestRailCase(21259)
     @Test
     fun `close should clear password when clearPassword is true`() {
         val passwordCollector = PasswordCollector()
@@ -24,6 +33,7 @@ class PasswordCollectorTest {
         assertEquals("", passwordCollector.value)
     }
 
+    @TestRailCase(22559)
     @Test
     fun `close should not clear password when clearPassword is false`() {
         val passwordCollector = PasswordCollector()
