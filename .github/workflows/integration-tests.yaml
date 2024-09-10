@@ -13,9 +13,21 @@ on:
         description: Platform to execute on
         type: string
         default: ubuntu-latest
+      testrail-run-id:
+        description: TestRail Run ID
+        type: string
     secrets:
       SLACK_WEBHOOK:
         description: Slack Notifier Incoming Webhook
+        required: true
+      CODECOV_TOKEN:
+        description: Codecov token
+        required: true
+      TESTRAIL_USERNAME:
+        description: TestRail username
+        required: true
+      TESTRAIL_API_KEY:
+        description: TestRail API key
         required: true
 jobs:
   integration-tests:
@@ -24,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        api-level: [29]
+        api-level: [28]
 
     steps:
       # Clone the repo
@@ -69,15 +81,35 @@ jobs:
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
 
+      # Update the testrail integration configuration (this is a hack...)
+      - name: Update the testrail integration configuration
+        run: |
+          cat foundation/testrail/src/main/kotlin/com/pingidentity/testrail/TestRailClientConfig.kt
+          sed -i -e "s/\"TESTRAIL_ENABLE\", \".*\"/\"TESTRAIL_ENABLE\", \"${{vars.TESTRAIL_ENABLE}}\"/g" foundation/testrail/src/main/kotlin/com/pingidentity/testrail/TestRailClientConfig.kt
+          sed -i -e "s/\"TESTRAIL_DEBUG\", \".*\"/\"TESTRAIL_DEBUG\", \"${{vars.TESTRAIL_DEBUG}}\"/g" foundation/testrail/src/main/kotlin/com/pingidentity/testrail/TestRailClientConfig.kt
+          sed -i -e "s/\"TESTRAIL_PROJECT_ID\", \".*\"/\"TESTRAIL_PROJECT_ID\", \"${{vars.TESTRAIL_PROJECT_ID}}\"/g" foundation/testrail/src/main/kotlin/com/pingidentity/testrail/TestRailClientConfig.kt
+          sed -i -e "s/\"TESTRAIL_RUN_ID\", \".*\"/\"TESTRAIL_RUN_ID\", \"${{inputs.testrail-run-id}}\"/g" foundation/testrail/src/main/kotlin/com/pingidentity/testrail/TestRailClientConfig.kt
+          sed -i -e "s/\"TESTRAIL_USERNAME\", \".*\"/\"TESTRAIL_USERNAME\", \"${{secrets.TESTRAIL_USERNAME}}\"/g" foundation/testrail/src/main/kotlin/com/pingidentity/testrail/TestRailClientConfig.kt
+          sed -i -e "s/\"TESTRAIL_API_KEY\", \".*\"/\"TESTRAIL_API_KEY\", \"${{secrets.TESTRAIL_API_KEY}}\"/g" foundation/testrail/src/main/kotlin/com/pingidentity/testrail/TestRailClientConfig.kt
+
       # Execute all integration tests
-      - name: run tests
+      - name: Execute integration tests
+        env:
+          # These environment variables don't work with the emulator-runner action for some reason
+          TESTRAIL_ENABLE: ${{vars.TESTRAIL_ENABLE}}
+          TESTRAIL_DEBUG: ${{vars.TESTRAIL_DEBUG}}
+          TESTRAIL_URL: ${{vars.TESTRAIL_URL}}
+          TESTRAIL_PROJECT_ID: ${{vars.TESTRAIL_PROJECT_ID}}
+          TESTRAIL_RUN_ID: ${{inputs.testrail-run-id}}
+          TESTRAIL_USERNAME: ${{secrets.TESTRAIL_USERNAME}}
+          TESTRAIL_API_KEY: ${{secrets.TESTRAIL_API_KEY}}
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew connectedCheck
+          script: ./gradlew --rerun-tasks connectedDebugAndroidTestCoverage --stacktrace --no-daemon
 
       # Publish test reports for the unit tests
       - name: Publish test results
@@ -90,3 +122,16 @@ jobs:
           list-tests: 'all'
           fail-on-error: 'true'
           reporter: java-junit
+
+      # Collect all coverage report files
+      - name: Find all coverage report files from all modules
+        run: |
+          echo "COVERAGE_REPORTS=$(echo $(printf '%s,' $(find . | grep test-coverage.xml)))" >> $GITHUB_ENV
+
+      # Upload code coverage report to Codecov
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.5.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ${{ env.COVERAGE_REPORTS }}
+          flags: integration-tests

@@ -85,6 +85,20 @@ class JacocoPlugin : Plugin<Project> {
                     flavorName = flavorName,
                     buildTypeName = buildTypeName
                 )
+
+                val connectedCheckTaskName = "connected${sourceName.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.ENGLISH
+                    ) else it.toString()
+                }}AndroidTest"
+
+                registerCodeCoverageTask(
+                    testTaskName = connectedCheckTaskName,
+                    sourceName = sourceName,
+                    sourcePath = sourcePath,
+                    flavorName = flavorName,
+                    buildTypeName = buildTypeName
+                )
             }
         }
     }
@@ -122,14 +136,14 @@ class JacocoPlugin : Plugin<Project> {
             classDirectories.setFrom(files(javaDirectories, kotlinDirectories))
             additionalClassDirs.setFrom(files(coverageSrcDirectories))
             sourceDirectories.setFrom(files(coverageSrcDirectories))
-            executionData.setFrom(
-                files("${project.layout.buildDirectory.get().asFile}/jacoco/${testTaskName}.exec")
-            )
+            executionData.setFrom(files(
+                fileTree(layout.buildDirectory) { include(listOf("**/*.exec", "**/*.ec")) }
+            ))
 
             reports {
                 xml.required.set(true)
                 html.required.set(true)
-                xml.outputLocation.set(file("${project.layout.buildDirectory.get().asFile}/coverage-report/test-coverage.xml"))
+                xml.outputLocation.set(file("${project.layout.buildDirectory.get().asFile}/coverage-report/${testTaskName}-test-coverage.xml"))
             }
         }
     }

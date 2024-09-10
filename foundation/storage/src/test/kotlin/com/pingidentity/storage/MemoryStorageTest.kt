@@ -7,7 +7,11 @@
 
 package com.pingidentity.storage
 
+import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -15,11 +19,16 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class MemoryStorageTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
+
     @AfterTest
     fun tearDown() =
         runTest {
         }
 
+    @TestRailCase(21622, 21623)
     @Test
     fun testDataStore() =
         runTest {
@@ -30,6 +39,7 @@ class MemoryStorageTest {
             assertEquals("test", storedData.b)
         }
 
+    @TestRailCase(21624, 21625)
     @Test
     fun testMultipleData() =
         runTest {
@@ -40,6 +50,7 @@ class MemoryStorageTest {
             assertEquals(dataList, storedData)
         }
 
+    @TestRailCase(21626)
     @Test
     fun testDeleteData() =
         runTest {
@@ -51,6 +62,7 @@ class MemoryStorageTest {
             assertEquals(null, storedData)
         }
 
+    @TestRailCase(21627)
     @Test
     fun testDifferentDataObjectsWithSameDataStore() =
         runTest {

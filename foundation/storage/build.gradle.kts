@@ -16,6 +16,13 @@ plugins {
 
 android {
     namespace = "com.pingidentity.storage"
+
+    buildTypes {
+        debug {
+            enableAndroidTestCoverage = true
+            enableUnitTestCoverage = true
+        }
+    }
 }
 
 dependencies {
@@ -36,6 +43,7 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.datastore.preferences)
     testImplementation(libs.robolectric)
+    testImplementation(project(":foundation:testrail"))
 
     androidTestImplementation(libs.kotlin.test)
     androidTestImplementation(libs.kotlinx.coroutines.test)
@@ -44,4 +52,5 @@ dependencies {
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.datastore.preferences) //Make it optional for developer
     androidTestImplementation(libs.androidx.security.crypto.ktx)
+    androidTestImplementation(project(":foundation:testrail"))
 }

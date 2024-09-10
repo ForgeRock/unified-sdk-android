@@ -8,18 +8,26 @@
 package com.pingidentity.divinci
 
 import com.pingidentity.orchestrate.Response
+import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 class ResponseTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
 
+    @TestRailCase(22131)
     @Test
     fun `body should return response body as string`() = runTest {
         val mockHttpResponse = mockk<HttpResponse> {
@@ -29,6 +37,7 @@ class ResponseTest {
         assertEquals("response body", response.body())
     }
 
+    @TestRailCase(22132)
     @Test
     fun `status should return response status code`() {
         val mockHttpResponse = mockk<HttpResponse> {
@@ -38,6 +47,7 @@ class ResponseTest {
         assertEquals(200, response.status())
     }
 
+    @TestRailCase(22133)
     @Test
     fun `cookies should return cookies from response`() {
         val mockHttpResponse = mockk<HttpResponse> {
@@ -47,6 +57,7 @@ class ResponseTest {
         assertEquals(listOf("cookie1=value1", "cookie2=value2"), response.cookies())
     }
 
+    @TestRailCase(22134)
     @Test
     fun `header should return specific header value`() {
         val mockHttpResponse = mockk<HttpResponse> {
@@ -56,6 +67,7 @@ class ResponseTest {
         assertEquals("application/json", response.header("Content-Type"))
     }
 
+    @TestRailCase(22135)
     @Test
     fun `header should return null if header is not present`() {
         val mockHttpResponse = mockk<HttpResponse> {

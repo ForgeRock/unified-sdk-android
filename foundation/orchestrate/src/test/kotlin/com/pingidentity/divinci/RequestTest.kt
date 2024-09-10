@@ -7,15 +7,23 @@
 
 package com.pingidentity.divinci
 import com.pingidentity.orchestrate.Request
+import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
 import io.ktor.client.request.forms.FormDataContent
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
 class RequestTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
 
+    @TestRailCase(22125)
     @Test
     fun `url sets the correct url`() {
         val request = Request()
@@ -23,6 +31,7 @@ class RequestTest {
         assertEquals("http://example.com", request.builder.url.toString())
     }
 
+    @TestRailCase(22126)
     @Test
     fun `parameter appends the correct parameter`() {
         val request = Request()
@@ -30,6 +39,7 @@ class RequestTest {
         assertEquals("value", request.builder.url.parameters["key"])
     }
 
+    @TestRailCase(22127)
     @Test
     fun `header appends the correct header`() {
         val request = Request()
@@ -37,6 +47,7 @@ class RequestTest {
         assertEquals("application/json", request.builder.headers["Content-Type"])
     }
 
+    @TestRailCase(22128)
     @Test
     fun `cookies sets the correct cookies`() {
         val request = Request()
@@ -49,6 +60,7 @@ class RequestTest {
         assertContains(request.builder.headers.getAll("Cookie")!![0], "interactionToken" )
     }
 
+    @TestRailCase(22129)
     @Test
     fun `body sets the correct body`() {
         val request = Request()
@@ -58,6 +70,7 @@ class RequestTest {
         assertEquals("""{"key":"value"}""", request.builder.body.toString())
     }
 
+    @TestRailCase(22130)
     @Test
     fun `form sets the correct form data`() {
         val request = Request()

@@ -7,11 +7,20 @@
 
 package com.pingidentity.oidc
 
+import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class PkceTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
+
+    @TestRailCase(22110)
     @Test
     fun `generate should create different Pkce for each call`() {
         val pkce1 = Pkce.generate()
@@ -21,6 +30,7 @@ class PkceTest {
         assertTrue(pkce1.codeChallenge != pkce2.codeChallenge)
     }
 
+    @TestRailCase(22111)
     @Test
     fun `generate should create valid Pkce`() {
         val pkce = Pkce.generate()

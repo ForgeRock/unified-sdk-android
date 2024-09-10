@@ -18,18 +18,26 @@ import com.pingidentity.orchestrate.Request
 import com.pingidentity.orchestrate.Success
 import com.pingidentity.orchestrate.Workflow
 import com.pingidentity.orchestrate.catch
+import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.buildJsonObject
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class NodeTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
 
+    @TestRailCase(22136)
     @Test
     fun `catch should return Error node for thrown exception`() {
         val exception = RuntimeException("Test exception")
@@ -38,6 +46,7 @@ class NodeTest {
         assertEquals(exception, node.cause)
     }
 
+    @TestRailCase(22137)
     @Test
     fun `catch should return Node for successful block execution`() {
         val successNode = Success(session = EmptySession)
@@ -45,6 +54,7 @@ class NodeTest {
         assertEquals(successNode, node)
     }
 
+    @TestRailCase(22138)
     @Test
     fun `Connector next should return next Node in workflow`() = runTest {
         val mockWorkflow = mockk<Workflow>()
@@ -62,6 +72,7 @@ class NodeTest {
         assertEquals(mockNode, nextNode)
     }
 
+    @TestRailCase(22139)
     @Test
     fun `Connector close should close all closeable actions`() {
         val o = object : Action, Closeable {

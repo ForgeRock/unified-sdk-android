@@ -12,7 +12,11 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
+import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import org.junit.runner.RunWith
 import kotlin.test.AfterTest
 import kotlin.test.Test
@@ -23,6 +27,10 @@ import kotlin.test.assertNull
 @RunWith(AndroidJUnit4::class)
 @SmallTest
 class EncryptedStorageTest {
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
+
     private val context: Context by lazy { ApplicationProvider.getApplicationContext<Application>() }
 
     @AfterTest
@@ -32,6 +40,7 @@ class EncryptedStorageTest {
             storage.delete()
         }
 
+    @TestRailCase(21628, 21629)
     @Test
     fun testDataStore() =
         runTest {
@@ -42,6 +51,7 @@ class EncryptedStorageTest {
             assertEquals("test", storedData.b)
         }
 
+    @TestRailCase(21630, 21631)
     @Test
     fun testMultipleData() =
         runTest {
@@ -52,6 +62,7 @@ class EncryptedStorageTest {
             assertEquals(dataList, storedData)
         }
 
+    @TestRailCase(21632)
     @Test
     fun testDeleteData() =
         runTest {
@@ -63,6 +74,23 @@ class EncryptedStorageTest {
             assertEquals(null, storedData)
         }
 
+    @TestRailCase(22075)
+    @Test
+    fun testOverwriteData() =
+        runTest {
+            val storage = EncryptedStorage<Data>("1", context = context)
+            storage.save(Data(1, "test1"))
+            val storedData = storage.get()
+            assertEquals(1, storedData!!.a)
+            assertEquals("test1", storedData.b)
+
+            storage.save(Data(2, "test2"))
+            val storedData1 = storage.get()
+            assertEquals(2, storedData1!!.a)
+            assertEquals("test2", storedData1.b)
+        }
+
+    @TestRailCase(21633)
     @Test
     fun testDifferentDataObjectsWithSameStorage() =
         runTest {
@@ -84,5 +112,14 @@ class EncryptedStorageTest {
             storageData.delete()
             assertNull(storageData.get())
             assertNotNull(storageData2.get())
+        }
+
+    @TestRailCase(22076)
+    @Test
+    fun testGettingNullData() =
+        runTest {
+            val storage = EncryptedStorage<Data>(filename = "2", context = context)
+            val storedData = storage.get()
+            assertNull(storedData)
         }
 }

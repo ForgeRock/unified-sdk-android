@@ -17,7 +17,11 @@ import androidx.test.filters.SmallTest
 import com.pingidentity.logger.CONSOLE
 import com.pingidentity.logger.Logger
 import com.pingidentity.storage.encrypt.SecretKeyEncryptor
+import com.pingidentity.testrail.TestRailCase
+import com.pingidentity.testrail.TestRailWatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
+import org.junit.rules.TestWatcher
 import org.junit.runner.RunWith
 import java.security.KeyStore
 import kotlin.test.AfterTest
@@ -30,6 +34,10 @@ import kotlin.test.assertNull
 @RunWith(AndroidJUnit4::class)
 @SmallTest
 class EncryptedDataStoreStorageTest {
+
+    @JvmField
+    @Rule
+    val watcher: TestWatcher = TestRailWatcher
 
     private val applicationContext: Context by lazy { ApplicationProvider.getApplicationContext<Application>() }
     private val Context.dataStore: DataStore<Data?> by dataStore(this.javaClass.simpleName, EncryptedSerializer(
@@ -57,7 +65,8 @@ class EncryptedDataStoreStorageTest {
         keyStore.deleteEntry(EncryptedDataStoreStorageTest::class.java.simpleName)
     }
 
-    @Test(timeout = 100L)
+    @TestRailCase(21628, 21629)
+    @Test
     fun testDataStore() =
         runTest {
             val storage = DataStoreStorage(applicationContext.dataStore)
