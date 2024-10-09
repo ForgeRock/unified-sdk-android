@@ -16,10 +16,11 @@ import kotlinx.serialization.json.buildJsonObject
 sealed interface Node
 
 /**
- * Represents an error node in the workflow.
- * @property cause The cause of the error.
+ * Represents a failure node in the workflow.
+ * @property input The input JSON object.
+ * @property message The failure message.
  */
-data class Error(val cause: Throwable) : Node
+data class Error(val input: JsonObject = buildJsonObject { }, val message: String) : Node
 
 /**
  * Abstract class for a Connector node in the workflow.
@@ -63,11 +64,10 @@ abstract class Connector(
 data class Success(val input: JsonObject = buildJsonObject {}, val session: Session) : Node
 
 /**
- * Represents a failure node in the workflow.
- * @property input The input JSON object.
- * @property message The failure message.
+ * Represents an error node in the workflow.
+ * @property cause The cause of the error.
  */
-data class Failure(val input: JsonObject = buildJsonObject { }, val message: String) : Node
+data class Failure(val cause: Throwable) : Node
 
 /**
  * Tries to execute the given block and returns an Error node if an exception is thrown.
@@ -78,6 +78,6 @@ inline fun catch(block: () -> Node): Node {
     return try {
         block()
     } catch (e: Throwable) {
-        Error(e)
+        Failure(e)
     }
 }

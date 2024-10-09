@@ -22,6 +22,8 @@ import com.pingidentity.orchestrate.Workflow
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
@@ -31,22 +33,58 @@ import kotlinx.serialization.json.jsonPrimitive
 internal val NodeTransform =
     Module.of {
         transform {
+            val statusCode = it.status()
+            try {
+                val body = it.body()
+                val jsonResponse: JsonObject = body.asJson()
+                val message: String = jsonResponse["message"]?.jsonPrimitive?.content ?: ""
 
-            when (it.status()) {
-                // DaVinci returns 400 for invalid requests,
-                // the previous [Connector] can be used to retry the request.
-                HttpStatusCode.BadRequest.value -> {
-                    failure(it.body().asJson())
-                }
+                when (statusCode) {
+                    // Check for 4XX errors that are unrecoverab
+                    in 400..499 -> {
+                        val errorCode = jsonResponse["code"]?.jsonPrimitive?.intOrNull
+                        val errorText = jsonResponse["code"]?.jsonPrimitive?.contentOrNull
+                        // Filter out client-side "timeout" related unrecoverable failures
+                        if (errorCode == 1999 || errorText == "requestTimedOut") {
+                            return@transform Failure(ApiException(statusCode, body))
+                        }
+                        // Filter our "PingOne Authentication Connector" unrecoverable failures
+                        val connectorId = jsonResponse["connectorId"]?.jsonPrimitive?.content
+                        if (connectorId == "pingOneAuthenticationConnector") {
+                            val capabilityName = jsonResponse["capabilityName"]?.jsonPrimitive?.content
+                            if (capabilityName in listOf("returnSuccessResponseRedirect", "setSession")) {
+                                return@transform Failure(ApiException(statusCode, body))
+                            }
+                        }
+                        // If we're still here, we have a 4XX failure that should be recoverable
+                        return@transform Error(jsonResponse, message)
+                    }
+                    // Handle success (2XX) responses
+                    200 -> {
+                        // Filter out 2XX errors with 'failure' status
+                        if (jsonResponse["status"]?.jsonPrimitive?.content == "FAILED") {
+                            return@transform Failure(ApiException(statusCode, body))
+                        }
 
-                HttpStatusCode.OK.value -> {
-                    transform(this, workflow, it.body().asJson())
-                }
+                        // Filter out 2XX errors with error object
+                        val error = jsonResponse["error"]?.jsonObject
+                        if (error.isNullOrEmpty().not()) {
+                            return@transform Failure(ApiException(HttpStatusCode.OK.value, body))
+                        }
+                        return@transform transform(this, workflow, jsonResponse)
+                    }
 
-                else -> {
-                    Error(ApiException(it.status(), it.body()))
+                    else -> {
+                        // 5XX errors are treated as unrecoverable failures
+                        return@transform Failure(ApiException(statusCode, body))
+                    }
                 }
             }
+            catch (e: Exception) {
+                // Any other unknown errors as unrecoverable failures
+                return@transform Failure(ApiException(statusCode, e.message ?: "Unknown error"))
+            }
+
         }
     }
 
@@ -54,21 +92,11 @@ private fun String.asJson(): JsonObject {
     return Json.parseToJsonElement(this).jsonObject
 }
 
-private fun failure(json: JsonObject): Failure {
-    return Failure(json, json["message"]?.jsonPrimitive?.content ?: "")
-}
-
 private fun transform(
     context: FlowContext,
     workflow: Workflow,
     json: JsonObject,
 ): Node {
-    // If status is FAILED, return error
-    if ("status" in json) {
-        if (json["status"]?.jsonPrimitive?.content == "FAILED") {
-            return Error(ApiException(HttpStatusCode.OK.value, json.toString()))
-        }
-    }
     //If authorizeResponse is present, return success
     if ("authorizeResponse" in json) {
         return Success(
