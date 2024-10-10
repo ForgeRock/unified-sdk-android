@@ -16,8 +16,8 @@ import com.pingidentity.journey.module.Session
 import com.pingidentity.logger.CONSOLE
 import com.pingidentity.logger.Logger
 import com.pingidentity.logger.STANDARD
-import com.pingidentity.orchestrate.Connector
-import com.pingidentity.orchestrate.Success
+import com.pingidentity.orchestrate.ContinueNode
+import com.pingidentity.orchestrate.SuccessNode
 import com.pingidentity.orchestrate.module.Cookie
 import com.pingidentity.storage.MemoryStorage
 import kotlinx.coroutines.test.runTest
@@ -63,8 +63,8 @@ class JourneyTest {
                 }
 
             var node = journey.start() // Return first Node
-            assertTrue(node is Connector)
-            assertTrue { (node as Connector).callbacks.size == 2 }
+            assertTrue(node is ContinueNode)
+            assertTrue { (node as ContinueNode).callbacks.size == 2 }
 
             node.callbacks.forEach {
                 when (it) {
@@ -79,7 +79,7 @@ class JourneyTest {
             }
 
             node = node.next()
-            assertTrue(node is Success)
+            assertTrue(node is SuccessNode)
 
             val user = node.user
             val result = user.token()
@@ -106,8 +106,8 @@ class JourneyTest {
                 }
 
             var node = journey.start() // Return first Node
-            assertTrue(node is Connector)
-            assertTrue { (node as Connector).callbacks.size == 2 }
+            assertTrue(node is ContinueNode)
+            assertTrue { (node as ContinueNode).callbacks.size == 2 }
 
             node.callbacks.forEach {
                 when (it) {
@@ -122,15 +122,15 @@ class JourneyTest {
             }
 
             node = node.next()
-            assertTrue(node is Success)
+            assertTrue(node is SuccessNode)
 
             assertTrue {
-                (node as Success).session.value().isNotEmpty()
+                (node as SuccessNode).session.value().isNotEmpty()
             }
 
             //start again should return Success immediately, since the session is already established with the Cookie module
             node = journey.start()
-            assertTrue(node is Success)
+            assertTrue(node is SuccessNode)
 
         }
 

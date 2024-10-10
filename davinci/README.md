@@ -69,23 +69,23 @@ val node = daVinci.start() //Start the flow
 
 //Determine the Node Type
 when (node) {
-    is Connector -> {}
-    is Error -> {}
-    is Failure -> {}
-    is Success -> {}
+    is ContinueNode -> {}
+    is ErrorNode -> {}
+    is FailureNode -> {}
+    is SuccessNode -> {}
 }
 ```
 
-| Node Type | Description                                                                                               |
-|-----------|:----------------------------------------------------------------------------------------------------------|
-| Connector | In the middle of the flow, call ```node.next``` to move to next Node in the flow                          |
-| Error     | Unexpected Error, e.g Network, parsing ```node.cause``` to retrieve the cause of the error                |
-| Failure   | Bad Request from the server, e.g Invalid Password, OTP, username ```node.message``` for the error message |
-| Success   | Authentication successful ```node.session``` to retrieve the session                                      |
+| Node Type   | Description                                                                                                |
+|-------------|:-----------------------------------------------------------------------------------------------------------|
+| ContinueNode    | In the middle of the flow, call ```node.next``` to move to next Node in the flow                           |
+| ErrorNode   | Bad Request from the server, e.g Invalid Password, OTP, username ```node.message``` for the error message  |
+| FailureNode | Unexpected Error, e.g Network, parsing ```node.cause``` to retrieve the cause of the error                 |
+| SuccessNode | Authentication successful ```node.session``` to retrieve the session                                       |
 
 ### Provide Input
 
-For `Connector` Node, you can access list of Collector with `node.collectors()` and provide input to
+For `ContinueNode` Node, you can access list of Collector with `node.collectors()` and provide input to
 the `Collector`.
 Currently, there are, `TextCollector`, `PasswordCollector`, `SubmitCollector`, `FlowCollector`, but more will be added in the future, such as `Fido`,
 `SocialLoginCollector`, etc...
@@ -102,19 +102,19 @@ To access the collectors, you can use the following code:
         }
     }
 
-    //Move to next Node, and repeat the flow until it reaches `Success` or `Error` Node
+    //Move to next Node, and repeat the flow until it reaches `SuccessNode` or `ErrorNode`
     val next = node.next()
 ```
 
 ### Error Handling
 
-For `Error` Node, you can retrieve the cause of the error by using `node.cause()`. The `cause` is a `Throwable` object,
+For `FailureNode`, you can retrieve the cause of the error by using `node.cause()`. The `cause` is a `Throwable` object,
 when receiving an error, you cannot continue the Flow, you may want to display a generic message to user, and report
 the issue to the Support team.
 The Error may include Network issue, parsing issue, API Error (Server response other that 2xx and 400) and other unexpected issues.
 
-For `Failure` Node, you can retrieve the error message by using `node.message()`, and the raw json response with `node.input`. 
-The `message` is a `String` object, when receiving a failure, you can continue the Flow with previous `Connector` Node, but you may want to display the error message to the user.
+For `ErrorNode`, you can retrieve the error message by using `node.message()`, and the raw json response with `node.input`. 
+The `message` is a `String` object, when receiving a failure, you can continue the Flow with previous `ContinueNode` Node, but you may want to display the error message to the user.
 e.g "Username/Password is incorrect", "OTP is invalid", etc...
 
 ```kotlin
@@ -122,14 +122,14 @@ val node = daVinci.start() //Start the flow
 
 //Determine the Node Type
 when (node) {
-    is Connector -> {}
-    is Error -> {
-        node.cause() //Retrieve the cause of the error
+    is ContinueNode -> {}
+    is ErrorNode -> {
+        node.message() //Retrieve the cause of the error
     }
-    is Failure -> {
-        node.message() //Retrieve the error message
+    is FailureNode -> {
+        node.cause() //Retrieve the error message
     }
-    is Success -> {}
+    is SuccessNode -> {}
 }
 ```
 
@@ -170,7 +170,7 @@ state.update {
     next
 }
 
-fun next(node: Connector) {
+fun next(node: ContinueNode) {
     viewModelScope.launch {
         val next = node.next()
         state.update {
@@ -183,10 +183,10 @@ fun next(node: Connector) {
 View
 ```kotlin
 when (val node = state.node) {
-    is Connector -> {}
-    is Error -> {}
-    is Failure -> {}
-    is Success -> {}
+    is ContinueNode -> {}
+    is ErrorNode -> {}
+    is FailureNode -> {}
+    is SuccessNode -> {}
 }
 ```
 

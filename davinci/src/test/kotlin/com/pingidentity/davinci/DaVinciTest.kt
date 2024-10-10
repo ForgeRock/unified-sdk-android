@@ -22,8 +22,8 @@ import com.pingidentity.davinci.plugin.collectors
 import com.pingidentity.logger.Logger
 import com.pingidentity.logger.STANDARD
 import com.pingidentity.oidc.Token
-import com.pingidentity.orchestrate.Connector
-import com.pingidentity.orchestrate.Success
+import com.pingidentity.orchestrate.ContinueNode
+import com.pingidentity.orchestrate.SuccessNode
 import com.pingidentity.orchestrate.module.Cookie
 import com.pingidentity.orchestrate.module.Cookies
 import com.pingidentity.orchestrate.module.CustomHeader
@@ -162,8 +162,8 @@ class DaVinciTest {
                 }
 
             var node = daVinci.start() // Return first Node
-            assertTrue(node is Connector)
-            assertTrue { (node as Connector).collectors.size == 5 }
+            assertTrue(node is ContinueNode)
+            assertTrue { (node as ContinueNode).collectors.size == 5 }
             assertEquals("cq77vwelou", node.id)
             assertEquals("Username/Password Form",  node.name)
             assertEquals("Test Description",  node.description)
@@ -174,7 +174,7 @@ class DaVinciTest {
             (node.collectors[2] as? SubmitCollector)?.value = "click me"
 
             node = node.next()
-            assertTrue(node is Success)
+            assertTrue(node is SuccessNode)
 
             mockEngine.requestHistory[0] // well-known
             val authorizeReq = mockEngine.requestHistory[1] // authorize
@@ -261,13 +261,13 @@ class DaVinciTest {
                 }
 
             var node = daVinci.start() // Return first Node
-            assertTrue(node is Connector)
+            assertTrue(node is ContinueNode)
             (node.collectors[0] as? TextCollector)?.value = "My First Name"
             (node.collectors[1] as? PasswordCollector)?.value = "My Password"
             (node.collectors[2] as? SubmitCollector)?.value = "click me"
 
             node = node.next()
-            assertTrue(node is Success)
+            assertTrue(node is SuccessNode)
 
             mockEngine.requestHistory[0] // well-known
             val authorizeReq = mockEngine.requestHistory[1] // authorize
@@ -313,14 +313,14 @@ class DaVinciTest {
                 }
 
             var node = daVinci.start() // Return first Node
-            assertTrue(node is Connector)
+            assertTrue(node is ContinueNode)
 
             (node.collectors[0] as? TextCollector)?.value = "My First Name"
             (node.collectors[1] as? PasswordCollector)?.value = "My Password"
             (node.collectors[2] as? SubmitCollector)?.value = "click me"
 
             node = node.next()
-            assertTrue(node is Success)
+            assertTrue(node is SuccessNode)
 
             val u = daVinci.user()
             u?.let {

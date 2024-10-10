@@ -20,16 +20,16 @@ sealed interface Node
  * @property input The input JSON object.
  * @property message The failure message.
  */
-data class Error(val input: JsonObject = buildJsonObject { }, val message: String) : Node
+data class ErrorNode(val input: JsonObject = buildJsonObject { }, val message: String) : Node
 
 /**
- * Abstract class for a Connector node in the workflow.
+ * Abstract class for a ContinueNode in the workflow.
  * @property context The context of the flow.
  * @property workflow The workflow the connector is part of.
  * @property input The input JSON object.
- * @property actions The list of actions to be performed by the connector.
+ * @property actions The list of actions to be performed by the ContinueNode.
  */
-abstract class Connector(
+abstract class ContinueNode(
     val context: FlowContext,
     val workflow: Workflow,
     val input: JsonObject,
@@ -44,7 +44,7 @@ abstract class Connector(
     }
 
     /**
-     * Converts the connector to a Request.
+     * Converts the ContinueNode to a Request.
      * @return The Request representation of the connector.
      */
     abstract fun asRequest(): Request
@@ -61,13 +61,13 @@ abstract class Connector(
  * Represents a success node in the workflow.
  * @property session The session associated with the success.
  */
-data class Success(val input: JsonObject = buildJsonObject {}, val session: Session) : Node
+data class SuccessNode(val input: JsonObject = buildJsonObject {}, val session: Session) : Node
 
 /**
  * Represents an error node in the workflow.
  * @property cause The cause of the error.
  */
-data class Failure(val cause: Throwable) : Node
+data class FailureNode(val cause: Throwable) : Node
 
 /**
  * Tries to execute the given block and returns an Error node if an exception is thrown.
@@ -78,6 +78,6 @@ inline fun catch(block: () -> Node): Node {
     return try {
         block()
     } catch (e: Throwable) {
-        Failure(e)
+        FailureNode(e)
     }
 }

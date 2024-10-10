@@ -8,7 +8,7 @@
 package com.pingidentity.journey.callback
 
 import com.pingidentity.journey.plugin.Callback
-import com.pingidentity.orchestrate.Connector
+import com.pingidentity.orchestrate.ContinueNode
 
 /*
 sealed interface Callback : Action {
@@ -19,5 +19,5 @@ sealed interface Callback : Action {
 }
  */
 
-val Connector.callbacks: List<Callback>
+val ContinueNode.callbacks: List<Callback>
     get() = this.actions.filterIsInstance<Callback>()

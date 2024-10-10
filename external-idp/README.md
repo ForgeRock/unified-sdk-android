@@ -54,7 +54,7 @@ Here's an example of how to use the `IdpCollector` instance:
 ```kotlin
 var node = daVinci.start()
 
-if (node is Connector) {
+if (node is ContinueNode) {
     node.collectors.forEach {
         when (it) {
             is IdpCollector -> {
@@ -75,15 +75,15 @@ if (node is Connector) {
 
 Simply call `idpCollector.authorize()` method to start the authentication flow with the External IDP,
 the `authorize()` will launch a `CustomTab` to authenticate with the External IDP,
-once the authentication is successful, it will return a `Success` result with `continueToken`,
-otherwise, it will return a `Failure` Node with `Throwable`.
+once the authentication is successful, it will return a `SuccessNode` result with `continueToken`,
+otherwise, it will return a `FailureNode`  with `Throwable`.
 
 ```kotlin
 when (val result = idpCollector.authorize()) {
-    is Success -> {
+    is SuccessNode -> {
         result.value //This is the continueToken
     }
-    is Failure -> {
+    is FailureNode -> {
         result.value //This is the Throwable
     }
 }

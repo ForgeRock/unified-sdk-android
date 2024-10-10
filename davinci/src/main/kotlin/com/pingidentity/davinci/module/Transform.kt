@@ -11,13 +11,13 @@ import com.pingidentity.exception.ApiException
 import com.pingidentity.davinci.collector.Form
 import com.pingidentity.davinci.plugin.Collector
 import com.pingidentity.oidc.exception.AuthorizeException
-import com.pingidentity.orchestrate.Error
-import com.pingidentity.orchestrate.Failure
+import com.pingidentity.orchestrate.ErrorNode
+import com.pingidentity.orchestrate.FailureNode
 import com.pingidentity.orchestrate.FlowContext
 import com.pingidentity.orchestrate.Module
 import com.pingidentity.orchestrate.Node
 import com.pingidentity.orchestrate.Session
-import com.pingidentity.orchestrate.Success
+import com.pingidentity.orchestrate.SuccessNode
 import com.pingidentity.orchestrate.Workflow
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.json.Json
@@ -46,43 +46,43 @@ internal val NodeTransform =
                         val errorText = jsonResponse["code"]?.jsonPrimitive?.contentOrNull
                         // Filter out client-side "timeout" related unrecoverable failures
                         if (errorCode == 1999 || errorText == "requestTimedOut") {
-                            return@transform Failure(ApiException(statusCode, body))
+                            return@transform FailureNode(ApiException(statusCode, body))
                         }
                         // Filter our "PingOne Authentication Connector" unrecoverable failures
                         val connectorId = jsonResponse["connectorId"]?.jsonPrimitive?.content
                         if (connectorId == "pingOneAuthenticationConnector") {
                             val capabilityName = jsonResponse["capabilityName"]?.jsonPrimitive?.content
                             if (capabilityName in listOf("returnSuccessResponseRedirect", "setSession")) {
-                                return@transform Failure(ApiException(statusCode, body))
+                                return@transform FailureNode(ApiException(statusCode, body))
                             }
                         }
                         // If we're still here, we have a 4XX failure that should be recoverable
-                        return@transform Error(jsonResponse, message)
+                        return@transform ErrorNode(jsonResponse, message)
                     }
                     // Handle success (2XX) responses
                     200 -> {
                         // Filter out 2XX errors with 'failure' status
                         if (jsonResponse["status"]?.jsonPrimitive?.content == "FAILED") {
-                            return@transform Failure(ApiException(statusCode, body))
+                            return@transform FailureNode(ApiException(statusCode, body))
                         }
 
                         // Filter out 2XX errors with error object
                         val error = jsonResponse["error"]?.jsonObject
                         if (error.isNullOrEmpty().not()) {
-                            return@transform Failure(ApiException(HttpStatusCode.OK.value, body))
+                            return@transform FailureNode(ApiException(HttpStatusCode.OK.value, body))
                         }
                         return@transform transform(this, workflow, jsonResponse)
                     }
 
                     else -> {
                         // 5XX errors are treated as unrecoverable failures
-                        return@transform Failure(ApiException(statusCode, body))
+                        return@transform FailureNode(ApiException(statusCode, body))
                     }
                 }
             }
             catch (e: Exception) {
                 // Any other unknown errors as unrecoverable failures
-                return@transform Failure(ApiException(statusCode, e.message ?: "Unknown error"))
+                return@transform FailureNode(ApiException(statusCode, e.message ?: "Unknown error"))
             }
 
         }
@@ -99,7 +99,7 @@ private fun transform(
 ): Node {
     //If authorizeResponse is present, return success
     if ("authorizeResponse" in json) {
-        return Success(
+        return SuccessNode(
             json,
             object : Session {
                 override fun value(): String {

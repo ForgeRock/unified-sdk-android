@@ -13,7 +13,7 @@ import com.pingidentity.oidc.OidcUser
 import com.pingidentity.oidc.User
 import com.pingidentity.orchestrate.EmptySession
 import com.pingidentity.orchestrate.Session
-import com.pingidentity.orchestrate.Success
+import com.pingidentity.orchestrate.SuccessNode
 
 private const val USER = "com.pingidentity.journey.User"
 
@@ -46,7 +46,7 @@ suspend fun Journey.user(): User? {
  */
 suspend fun Journey.journeyUser(): User? = this.user()
 
-val Success.user: User
+val SuccessNode.user: User
     get() = session as User
 
 /**

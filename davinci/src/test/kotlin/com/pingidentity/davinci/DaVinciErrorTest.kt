@@ -16,7 +16,7 @@ import com.pingidentity.davinci.module.Oidc
 import com.pingidentity.davinci.plugin.collectors
 import com.pingidentity.logger.Logger
 import com.pingidentity.logger.STANDARD
-import com.pingidentity.orchestrate.Connector
+import com.pingidentity.orchestrate.ContinueNode
 import com.pingidentity.orchestrate.module.Cookie
 import com.pingidentity.storage.MemoryStorage
 import io.ktor.client.HttpClient
@@ -28,8 +28,8 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertTrue
-import com.pingidentity.orchestrate.Error
-import com.pingidentity.orchestrate.Failure
+import com.pingidentity.orchestrate.ErrorNode
+import com.pingidentity.orchestrate.FailureNode
 import com.pingidentity.testrail.TestRailWatcher
 import org.junit.Rule
 import org.junit.rules.TestWatcher
@@ -100,10 +100,10 @@ class DaVinciErrorTest {
                 }
 
             val node = daVinci.start() // Return first Node
-            assertTrue { node is Failure }
-            assertTrue { (node as Failure).cause is ApiException }
-            assertTrue { ((node as Failure).cause as ApiException).status == 404 }
-            assertTrue { ((node as Failure).cause as ApiException).content == "Not Found" }
+            assertTrue { node is FailureNode }
+            assertTrue { (node as FailureNode).cause is ApiException }
+            assertTrue { ((node as FailureNode).cause as ApiException).status == 404 }
+            assertTrue { ((node as FailureNode).cause as ApiException).content == "Not Found" }
         }
 
     @TestRailCase(21286)
@@ -157,8 +157,8 @@ class DaVinciErrorTest {
                 }
 
             val node = daVinci.start() // Return first Node
-            assertTrue { node is Error }
-            assertContains((node as Error).input.toString(), "INVALID_REQUEST")
+            assertTrue { node is ErrorNode }
+            assertContains((node as ErrorNode).input.toString(), "INVALID_REQUEST")
         }
 
     @TestRailCase(21287)
@@ -217,8 +217,8 @@ class DaVinciErrorTest {
                 }
 
             val node = daVinci.start() // Return first Node
-            assertTrue { node is Failure }
-            assertContains((node as Failure).cause.toString(), "login_required")
+            assertTrue { node is FailureNode }
+            assertContains((node as FailureNode).cause.toString(), "login_required")
         }
 
     @TestRailCase(21288)
@@ -270,8 +270,8 @@ class DaVinciErrorTest {
                 }
 
             val node = daVinci.start() // Return first Node
-            assertTrue { node is Failure }
-            assertContains((node as Failure).cause.toString(), "{ Not a Json }")
+            assertTrue { node is FailureNode }
+            assertContains((node as FailureNode).cause.toString(), "{ Not a Json }")
             val exception = node.cause as ApiException
             assertTrue { exception.status ==  HttpStatusCode.OK.value }
         }
@@ -326,7 +326,7 @@ class DaVinciErrorTest {
                 }
 
             val node = daVinci.start() // Return first Node
-            assertTrue(node is Connector)
+            assertTrue(node is ContinueNode)
             (node.collectors[0] as? TextCollector)?.value = "My First Name"
             (node.collectors[1] as? PasswordCollector)?.value = "My Password"
             (node.collectors[2] as? SubmitCollector)?.value = "click me"
@@ -335,7 +335,7 @@ class DaVinciErrorTest {
             //Make sure the password is cleared by close() interface
             assertEquals("", (node.collectors[1] as? PasswordCollector)?.value)
 
-            assertTrue(next is Error)
+            assertTrue(next is ErrorNode)
             assertEquals(" Invalid username and/or password", next.message)
             assertContains(next.input.toString(), "The provided password did not match provisioned password")
 
@@ -395,8 +395,8 @@ class DaVinciErrorTest {
                 }
 
             val node = daVinci.start() // Return first Node
-            assertTrue { node is Failure }
-            assertContains((node as Failure).cause.toString(), "login_required")
+            assertTrue { node is FailureNode }
+            assertContains((node as FailureNode).cause.toString(), "login_required")
         }
 
     @Test
@@ -455,8 +455,8 @@ class DaVinciErrorTest {
                 }
 
             val node = daVinci.start() // Return first Node
-            assertTrue { node is Failure }
-            assertContains((node as Failure).cause.toString(), "Unauthorized!")
+            assertTrue { node is FailureNode }
+            assertContains((node as FailureNode).cause.toString(), "Unauthorized!")
             val exception = node.cause as ApiException
             assertTrue { exception.status == randomErrorCode.value }
 
@@ -518,8 +518,8 @@ class DaVinciErrorTest {
                 }
 
             val node = daVinci.start() // Return first Node
-            assertTrue { node is Failure }
-            assertContains((node as Failure).cause.toString(), "Unauthorized!")
+            assertTrue { node is FailureNode }
+            assertContains((node as FailureNode).cause.toString(), "Unauthorized!")
             val exception = node.cause as ApiException
             assertTrue { exception.status == randomErrorCode.value }
 
@@ -583,8 +583,8 @@ class DaVinciErrorTest {
                 }
 
             val node = daVinci.start() // Return first Node
-            assertTrue { node is Failure }
-            assertContains((node as Failure).cause.toString(), "Invalid Connector.")
+            assertTrue { node is FailureNode }
+            assertContains((node as FailureNode).cause.toString(), "Invalid Connector.")
             val exception = node.cause as ApiException
             assertTrue { exception.status == randomErrorCode.value }
 
@@ -643,8 +643,8 @@ class DaVinciErrorTest {
                 }
 
             val node = daVinci.start() // Return first Node
-            assertTrue { node is Failure }
-            assertContains((node as Failure).cause.toString(), "Invalid response.")
+            assertTrue { node is FailureNode }
+            assertContains((node as FailureNode).cause.toString(), "Invalid response.")
             val exception = node.cause as ApiException
             assertTrue { exception.status == randomErrorCode }
 

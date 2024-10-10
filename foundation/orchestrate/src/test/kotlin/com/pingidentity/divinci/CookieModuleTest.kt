@@ -7,11 +7,11 @@
 
 package com.pingidentity.divinci
 
-import com.pingidentity.orchestrate.Connector
+import com.pingidentity.orchestrate.ContinueNode
 import com.pingidentity.orchestrate.EmptySession
 import com.pingidentity.orchestrate.Module
 import com.pingidentity.orchestrate.Request
-import com.pingidentity.orchestrate.Success
+import com.pingidentity.orchestrate.SuccessNode
 import com.pingidentity.orchestrate.Workflow
 import com.pingidentity.orchestrate.module.Cookie
 import com.pingidentity.orchestrate.module.Cookies
@@ -65,7 +65,7 @@ class CookieModuleTest {
 
         val dummy = Module.of {
             transform {
-                Success(session = EmptySession)
+                SuccessNode(session = EmptySession)
             }
         }
 
@@ -108,7 +108,7 @@ class CookieModuleTest {
 
         val dummy = Module.of {
             transform {
-                Success(session = EmptySession)
+                SuccessNode(session = EmptySession)
             }
         }
 
@@ -155,10 +155,10 @@ class CookieModuleTest {
         val dummy = Module.of {
             transform {
                 if (success) {
-                    Success(session = EmptySession)
+                    SuccessNode(session = EmptySession)
                 } else {
                     success = true
-                    object : Connector(this, workflow, json, emptyList()) {
+                    object : ContinueNode(this, workflow, json, emptyList()) {
                         override fun asRequest(): Request {
                             return Request()
                         }
@@ -180,7 +180,7 @@ class CookieModuleTest {
             }
         }
         val node = workflow.start()
-        (node as Connector).next()
+        (node as ContinueNode).next()
 
         assertTrue(
             mockEngine.requestHistory[1].headers["Cookie"]!!.contains("interactionId=178ce234-afd2-4207-984e-bda28bd7042c")
@@ -228,7 +228,7 @@ class CookieModuleTest {
 
         val dummy = Module.of {
             transform {
-                Success(session = EmptySession)
+                SuccessNode(session = EmptySession)
             }
         }
 

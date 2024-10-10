@@ -12,7 +12,7 @@ import com.pingidentity.oidc.OidcUser
 import com.pingidentity.oidc.User
 import com.pingidentity.orchestrate.EmptySession
 import com.pingidentity.orchestrate.Session
-import com.pingidentity.orchestrate.Success
+import com.pingidentity.orchestrate.SuccessNode
 import com.pingidentity.orchestrate.module.hasCookies
 
 private const val USER = "com.pingidentity.davinci.User"
@@ -47,9 +47,9 @@ suspend fun DaVinci.user(): User? {
 suspend fun DaVinci.davinciUser(): User? = this.user()
 
 /**
- * Extension property for Success to cast the [Success.session] to a User.
+ * Extension property for Success to cast the [SuccessNode.session] to a User.
  */
-val Success.user: User
+val SuccessNode.user: User
     get() = session as User
 
 /**

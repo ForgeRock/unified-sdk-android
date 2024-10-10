@@ -10,19 +10,18 @@ package com.pingidentity.divinci
 import com.pingidentity.testrail.TestRailCase
 import com.pingidentity.logger.CONSOLE
 import com.pingidentity.logger.Logger
-import com.pingidentity.orchestrate.Connector
+import com.pingidentity.orchestrate.ContinueNode
 import com.pingidentity.orchestrate.EmptySession
-import com.pingidentity.orchestrate.Error
-import com.pingidentity.orchestrate.Failure
+import com.pingidentity.orchestrate.ErrorNode
+import com.pingidentity.orchestrate.FailureNode
 import com.pingidentity.orchestrate.Module
 import com.pingidentity.orchestrate.OverrideMode.APPEND
 import com.pingidentity.orchestrate.OverrideMode.IGNORE
 import com.pingidentity.orchestrate.Request
-import com.pingidentity.orchestrate.Success
+import com.pingidentity.orchestrate.SuccessNode
 import com.pingidentity.orchestrate.Workflow
 import com.pingidentity.testrail.TestRailWatcher
 import com.pingidentity.utils.PingDsl
-import com.pingidentity.utils.Result
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -38,7 +37,6 @@ import org.junit.rules.TestWatcher
 import kotlin.IllegalStateException
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class WorkflowTest {
@@ -318,7 +316,7 @@ class WorkflowTest {
                 it
             }
             transform {
-                Success(session = EmptySession)
+                SuccessNode(session = EmptySession)
             }
             signOff {
                 it
@@ -382,10 +380,10 @@ class WorkflowTest {
             transform {
                 transformCnt++
                 if (success) {
-                    Success(session = EmptySession)
+                    SuccessNode(session = EmptySession)
                 } else {
                     success = true
-                    object : Connector(this, workflow, json, emptyList()) {
+                    object : ContinueNode(this, workflow, json, emptyList()) {
                         override fun asRequest(): Request {
                             return Request()
                         }
@@ -407,7 +405,7 @@ class WorkflowTest {
         }
 
         val node = workflow.start()
-        val connector = node as Connector
+        val connector = node as ContinueNode
         assertEquals(workflow, connector.workflow)
         assertEquals(json, connector.input)
         assertTrue(connector.actions.isEmpty())
@@ -457,10 +455,10 @@ class WorkflowTest {
             transform {
                 sharedContext["count"] = sharedContext["count"] as Int + 1
                 if (success) {
-                    Success(session = EmptySession)
+                    SuccessNode(session = EmptySession)
                 } else {
                     success = true
-                    object : Connector(this, workflow, json, emptyList()) {
+                    object : ContinueNode(this, workflow, json, emptyList()) {
                         override fun asRequest(): Request {
                             return Request()
                         }
@@ -484,7 +482,7 @@ class WorkflowTest {
         workflow.sharedContext["count"] = 0
 
         val node = workflow.start()
-        (node as Connector).next()
+        (node as ContinueNode).next()
 
         assertEquals(10, workflow.sharedContext.getValue<Int>("count"))
     }
@@ -503,7 +501,7 @@ class WorkflowTest {
         }
 
         val node = workflow.start()
-        assertTrue(node is Error)
+        assertTrue(node is FailureNode)
         assertTrue(node.cause is IllegalStateException)
     }
 
@@ -521,7 +519,7 @@ class WorkflowTest {
         }
 
         val node = workflow.start()
-        assertTrue(node is Error)
+        assertTrue(node is FailureNode)
         assertTrue(node.cause is IllegalStateException)
     }
 
@@ -549,7 +547,7 @@ class WorkflowTest {
         }
 
         val node = workflow.start()
-        assertTrue(node is Error)
+        assertTrue(node is FailureNode)
         assertTrue(node.cause is IllegalStateException)
     }
 
@@ -577,7 +575,7 @@ class WorkflowTest {
         }
 
         val node = workflow.start()
-        assertTrue(node is Error)
+        assertTrue(node is FailureNode)
         assertTrue(node.cause is IllegalStateException)
     }
 
@@ -602,7 +600,7 @@ class WorkflowTest {
             }
 
             transform {
-                object : Connector(this, workflow, json, emptyList()) {
+                object : ContinueNode(this, workflow, json, emptyList()) {
                     override fun asRequest(): Request {
                         return Request()
                     }
@@ -616,8 +614,8 @@ class WorkflowTest {
         }
 
         val node = workflow.start()
-        val next = (node as Connector).next()
-        assertTrue(next is Error)
+        val next = (node as ContinueNode).next()
+        assertTrue(next is FailureNode)
         assertTrue(next.cause is IllegalStateException)
     }
 
@@ -642,7 +640,7 @@ class WorkflowTest {
             }
 
             transform {
-                object : Connector(this, workflow, json, emptyList()) {
+                object : ContinueNode(this, workflow, json, emptyList()) {
                     override fun asRequest(): Request {
                         return Request()
                     }
@@ -656,7 +654,7 @@ class WorkflowTest {
         }
 
         val node = workflow.start()
-        assertTrue(node is Error)
+        assertTrue(node is FailureNode)
         assertTrue(node.cause is IllegalStateException)
     }
 
@@ -675,7 +673,7 @@ class WorkflowTest {
         val module = Module.of {
 
             transform {
-                Success(session = EmptySession)
+                SuccessNode(session = EmptySession)
             }
 
             success {
@@ -691,7 +689,7 @@ class WorkflowTest {
 
         val node = workflow.start()
 
-        assertTrue(node is Error)
+        assertTrue(node is FailureNode)
         assertTrue(node.cause is IllegalStateException)
     }
 
@@ -710,7 +708,7 @@ class WorkflowTest {
 
         val dummy = Module.of {
             transform {
-                Failure(Json.parseToJsonElement("{}").jsonObject, "Invalid request")
+                ErrorNode(Json.parseToJsonElement("{}").jsonObject, "Invalid request")
             }
         }
         val workflow = Workflow {
@@ -719,7 +717,7 @@ class WorkflowTest {
         }
 
         val node = workflow.start()
-        val failure = node as Failure
+        val failure = node as ErrorNode
         assertEquals("Invalid request", failure.message)
         assertTrue(failure.input.isEmpty())
     }

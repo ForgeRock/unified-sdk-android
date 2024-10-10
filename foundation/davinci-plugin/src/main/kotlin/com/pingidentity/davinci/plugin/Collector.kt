@@ -8,7 +8,7 @@
 package com.pingidentity.davinci.plugin
 
 import com.pingidentity.orchestrate.Action
-import com.pingidentity.orchestrate.Connector
+import com.pingidentity.orchestrate.ContinueNode
 import kotlinx.serialization.json.JsonObject
 
 /**
@@ -29,7 +29,7 @@ interface Collector : Action {
  *
  * @return A list of Collector instances.
  */
-val Connector.collectors: List<Collector>
+val ContinueNode.collectors: List<Collector>
     get() = this.actions.filterIsInstance<Collector>()
 
 /**

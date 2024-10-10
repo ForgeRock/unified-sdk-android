@@ -21,7 +21,7 @@ import com.pingidentity.oidc.Pkce
 import com.pingidentity.oidc.exception.AuthorizeException
 import com.pingidentity.orchestrate.Module
 import com.pingidentity.orchestrate.Session
-import com.pingidentity.orchestrate.Success
+import com.pingidentity.orchestrate.SuccessNode
 
 /**
  * Constant for PKCE.
@@ -71,7 +71,7 @@ val Oidc =
                 config.clone().also {
                     it.updateAgent(agent(success.session, flowContext[PKCE] as Pkce))
                 }
-            Success(success.input, prepareUser(workflow, OidcUser(clone), success.session))
+            SuccessNode(success.input, prepareUser(workflow, OidcUser(clone), success.session))
         }
 
         /**

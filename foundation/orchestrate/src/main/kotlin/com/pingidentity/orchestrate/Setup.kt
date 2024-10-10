@@ -45,7 +45,7 @@ class Setup<ModuleConfig : Any> internal constructor(
      * Adds a next block to the workflow.
      * @param block The block to be added.
      */
-    fun next(block: suspend FlowContext.(Connector, Request) -> Request) {
+    fun next(block: suspend FlowContext.(ContinueNode, Request) -> Request) {
         workflow.next.add(block)
     }
 
@@ -69,7 +69,7 @@ class Setup<ModuleConfig : Any> internal constructor(
      * Adds a success block to the workflow.
      * @param block The block to be added.
      */
-    fun success(block: suspend FlowContext.(Success) -> Success) {
+    fun success(block: suspend FlowContext.(SuccessNode) -> SuccessNode) {
         workflow.success.add(block)
     }
 

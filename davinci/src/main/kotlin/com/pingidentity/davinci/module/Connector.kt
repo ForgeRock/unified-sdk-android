@@ -12,7 +12,7 @@ import com.pingidentity.davinci.collector.asJson
 import com.pingidentity.davinci.collector.continueToken
 import com.pingidentity.davinci.collector.eventType
 import com.pingidentity.davinci.plugin.Collectors
-import com.pingidentity.orchestrate.Connector
+import com.pingidentity.orchestrate.ContinueNode
 import com.pingidentity.orchestrate.FlowContext
 import com.pingidentity.orchestrate.Request
 import com.pingidentity.orchestrate.Workflow
@@ -26,25 +26,25 @@ import java.net.URL
 /**
  * Extension property to get the id of a Connector.
  */
-val Connector.id: String
+val ContinueNode.id: String
     get() = (this as DaVinciConnector).id
 
 /**
  * Extension property to get the name of a Connector.
  */
-val Connector.name: String
+val ContinueNode.name: String
     get() = (this as DaVinciConnector).name
 
 /**
  * Extension property to get the description of a Connector.
  */
-val Connector.description: String
+val ContinueNode.description: String
     get() = (this as DaVinciConnector).description
 
 /**
  * Extension property to get the category of a Connector.
  */
-val Connector.category: String
+val ContinueNode.category: String
     get() = (this as DaVinciConnector).category
 
 /**
@@ -57,7 +57,7 @@ val Connector.category: String
  */
 internal class DaVinciConnector(
     context: FlowContext, workflow: Workflow, input: JsonObject, private val collectors: Collectors
-) : Connector(
+) : ContinueNode(
     context, workflow, input, collectors
 ) {
 
