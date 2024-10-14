@@ -272,8 +272,6 @@ class DaVinciErrorTest {
             val node = daVinci.start() // Return first Node
             assertTrue { node is FailureNode }
             assertContains((node as FailureNode).cause.toString(), "{ Not a Json }")
-            val exception = node.cause as ApiException
-            assertTrue { exception.status ==  HttpStatusCode.OK.value }
         }
 
     @TestRailCase(21289)
@@ -341,6 +339,7 @@ class DaVinciErrorTest {
 
         }
 
+    @TestRailCase(23793)
     @Test
     fun `DaVinci Authorization Failure with OK Status and Error Object in Response`() =
         runTest {
@@ -399,6 +398,7 @@ class DaVinciErrorTest {
             assertContains((node as FailureNode).cause.toString(), "login_required")
         }
 
+    @TestRailCase (23794)
     @Test
     fun `DaVinci 4xx Error with Error Timeout in Response`() =
         runTest {
@@ -462,7 +462,7 @@ class DaVinciErrorTest {
 
         }
 
-
+    @TestRailCase(23795)
     @Test
     fun `DaVinci 4xx Error with Error Code 1999 in Response`() =
         runTest {
@@ -525,6 +525,7 @@ class DaVinciErrorTest {
 
         }
 
+    @TestRailCase(23796)
     @Test
     fun `DaVinci 4xx Error with Invalid Connector and Session`() =
         runTest {
@@ -590,6 +591,7 @@ class DaVinciErrorTest {
 
         }
 
+    @TestRailCase(23797)
     @Test
     fun `DaVinci 4xx Error with Invalid Connector and  Redirect`() =
         runTest {
@@ -649,6 +651,4 @@ class DaVinciErrorTest {
             assertTrue { exception.status == randomErrorCode }
 
         }
-
-
 }

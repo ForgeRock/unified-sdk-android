@@ -20,6 +20,7 @@ import com.pingidentity.davinci.plugin.collectors
 import com.pingidentity.logger.Logger
 import com.pingidentity.logger.STANDARD
 import com.pingidentity.orchestrate.ContinueNode
+import com.pingidentity.orchestrate.ErrorNode
 import com.pingidentity.orchestrate.FailureNode
 import com.pingidentity.orchestrate.SuccessNode
 import com.pingidentity.testrail.TestRailCase
@@ -68,7 +69,7 @@ class DavinciAndroidTest {
 
         // This user must exist in PingOne...
         username = "e2euser@example.com"
-        password = "ForgeR0ck#1"
+        password = "Demo1234#1"
         verificationCode = "1234" // This is hardcoded value in the DaVinci flow
 
         //Start with a clean session
@@ -158,7 +159,7 @@ class DavinciAndroidTest {
         (node.collectors[2] as? SubmitCollector)?.value = "Sign On"
 
         node = node.next()
-        assertTrue(node is FailureNode)
+        assertTrue(node is ErrorNode)
         assertNotNull(node.input)
         assertEquals("Invalid username and/or password", node.message.trim())
 
@@ -310,11 +311,11 @@ class DavinciAndroidTest {
         (node.collectors[3] as? PasswordCollector)?.value = password
         (node.collectors[4] as? SubmitCollector)?.value = "Save"
 
-        val failureNode = node.next()
-        assertTrue(failureNode is FailureNode)
+        val errorNode = node.next()
+        assertTrue(errorNode is ErrorNode)
 
-        assertEquals("400", failureNode.input["code"].toString())
-        assertEquals("uniquenessViolation username: is unique but a non-unique value is provided", failureNode.message.trim())
+        assertEquals("400", errorNode.input["code"].toString())
+        assertEquals("uniquenessViolation username: is unique but a non-unique value is provided", errorNode.message.trim())
 
         // Make sure that we are still at the registration form
         assertEquals("Registration Form", node.name)
@@ -344,11 +345,11 @@ class DavinciAndroidTest {
         (node.collectors[3] as? PasswordCollector)?.value = password
         (node.collectors[4] as? SubmitCollector)?.value = "Save"
 
-        var failureNode = node.next()
-        assertTrue(failureNode is FailureNode)
+        var errorNode = node.next()
+        assertTrue(errorNode is ErrorNode)
 
-        assertEquals("400", failureNode.input["code"].toString())
-        assertEquals("invalidInput \"username\" - must not be blank", failureNode.message.trim())
+        assertEquals("400", errorNode.input["code"].toString())
+        assertEquals("invalidInput \"username\" - must not be blank", errorNode.message.trim())
 
         // Make sure that we are still at the registration form
         assertEquals("Registration Form", node.name)
@@ -360,11 +361,11 @@ class DavinciAndroidTest {
         (node.collectors[3] as? PasswordCollector)?.value = password
         (node.collectors[4] as? SubmitCollector)?.value = "Save"
 
-        failureNode = node.next()
-        assertTrue(failureNode is FailureNode)
+        errorNode = node.next()
+        assertTrue(errorNode is ErrorNode)
 
-        assertEquals("400", failureNode.input["code"].toString())
-        assertEquals("invalidValue email: must be a well-formed email address", failureNode.message.trim())
+        assertEquals("400", errorNode.input["code"].toString())
+        assertEquals("invalidValue email: must be a well-formed email address", errorNode.message.trim())
 
         assertNull(daVinci.user())
     }
@@ -392,11 +393,11 @@ class DavinciAndroidTest {
         (node.collectors[3] as? PasswordCollector)?.value = "invalid"
         (node.collectors[4] as? SubmitCollector)?.value = "Save"
 
-        val failureNode = node.next()
-        assertTrue(failureNode is FailureNode)
+        val errorNode = node.next()
+        assertTrue(errorNode is ErrorNode)
 
-        assertEquals("400", failureNode.input["code"].toString())
-        assertEquals("invalidValue password: User password did not satisfy password policy requirements", failureNode.message.trim())
+        assertEquals("400", errorNode.input["code"].toString())
+        assertEquals("invalidValue password: User password did not satisfy password policy requirements", errorNode.message.trim())
 
         // Make sure that we are still at the registration form
         assertEquals("Registration Form", node.name)
@@ -437,11 +438,11 @@ class DavinciAndroidTest {
         // Enter invalid verification code and submit
         (node.collectors[0] as? TextCollector)?.value = "invalid"
         (node.collectors[1] as? SubmitCollector)?.value = "Verify"
-        val failureNode = node.next()
-        assertTrue(failureNode is FailureNode)
+        val errorNode = node.next()
+        assertTrue(errorNode is ErrorNode)
 
-        assertEquals("400", failureNode.input["code"].toString())
-        assertEquals("Invalid verification code", failureNode.message.trim())
+        assertEquals("400", errorNode.input["code"].toString())
+        assertEquals("Invalid verification code", errorNode.message.trim())
 
         // Make sure that we are still at the registration form
         assertEquals("Enter verification code", node.name)
@@ -671,11 +672,11 @@ class DavinciAndroidTest {
         (node.collectors[1] as? PasswordCollector)?.value = password
         (node.collectors[2] as? SubmitCollector)?.value = "Save"
 
-        var failureNode = node.next()
-        assertTrue(failureNode is FailureNode)
+        var errorNode = node.next()
+        assertTrue(errorNode is ErrorNode)
 
-        assertEquals("400", failureNode.input["code"].toString())
-        assertEquals("newPasswordNotValid newPassword: New password did not satisfy password policy requirements", failureNode.message.trim())
+        assertEquals("400", errorNode.input["code"].toString())
+        assertEquals("newPasswordNotValid newPassword: New password did not satisfy password policy requirements", errorNode.message.trim())
 
         // Make sure that we are still at the "Reset Password" screen
         assertEquals("Reset Password", node.name)
@@ -685,11 +686,11 @@ class DavinciAndroidTest {
         (node.collectors[1] as? PasswordCollector)?.value = "weak"
         (node.collectors[2] as? SubmitCollector)?.value = "Save"
 
-        failureNode = node.next()
-        assertTrue(failureNode is FailureNode)
+        errorNode = node.next()
+        assertTrue(errorNode is ErrorNode)
 
-        assertEquals("400", failureNode.input["code"].toString())
-        assertEquals("newPasswordNotValid newPassword: New password did not satisfy password policy requirements", failureNode.message.trim())
+        assertEquals("400", errorNode.input["code"].toString())
+        assertEquals("newPasswordNotValid newPassword: New password did not satisfy password policy requirements", errorNode.message.trim())
 
         // Fill in the reset password form with valid new password
         (node.collectors[0] as? PasswordCollector)?.value = password

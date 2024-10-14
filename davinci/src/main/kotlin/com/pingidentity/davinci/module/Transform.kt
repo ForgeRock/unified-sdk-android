@@ -34,55 +34,47 @@ internal val NodeTransform =
     Module.of {
         transform {
             val statusCode = it.status()
-            try {
-                val body = it.body()
-                val jsonResponse: JsonObject = body.asJson()
-                val message: String = jsonResponse["message"]?.jsonPrimitive?.content ?: ""
-
-                when (statusCode) {
-                    // Check for 4XX errors that are unrecoverab
-                    in 400..499 -> {
-                        val errorCode = jsonResponse["code"]?.jsonPrimitive?.intOrNull
-                        val errorText = jsonResponse["code"]?.jsonPrimitive?.contentOrNull
-                        // Filter out client-side "timeout" related unrecoverable failures
-                        if (errorCode == 1999 || errorText == "requestTimedOut") {
-                            return@transform FailureNode(ApiException(statusCode, body))
-                        }
-                        // Filter our "PingOne Authentication Connector" unrecoverable failures
-                        val connectorId = jsonResponse["connectorId"]?.jsonPrimitive?.content
-                        if (connectorId == "pingOneAuthenticationConnector") {
-                            val capabilityName = jsonResponse["capabilityName"]?.jsonPrimitive?.content
-                            if (capabilityName in listOf("returnSuccessResponseRedirect", "setSession")) {
-                                return@transform FailureNode(ApiException(statusCode, body))
-                            }
-                        }
-                        // If we're still here, we have a 4XX failure that should be recoverable
-                        return@transform ErrorNode(jsonResponse, message)
-                    }
-                    // Handle success (2XX) responses
-                    200 -> {
-                        // Filter out 2XX errors with 'failure' status
-                        if (jsonResponse["status"]?.jsonPrimitive?.content == "FAILED") {
-                            return@transform FailureNode(ApiException(statusCode, body))
-                        }
-
-                        // Filter out 2XX errors with error object
-                        val error = jsonResponse["error"]?.jsonObject
-                        if (error.isNullOrEmpty().not()) {
-                            return@transform FailureNode(ApiException(HttpStatusCode.OK.value, body))
-                        }
-                        return@transform transform(this, workflow, jsonResponse)
-                    }
-
-                    else -> {
-                        // 5XX errors are treated as unrecoverable failures
+            val body = it.body()
+            val jsonResponse: JsonObject = body.asJson()
+            val message: String = jsonResponse["message"]?.jsonPrimitive?.content ?: ""
+            when (statusCode) {
+                // Check for 4XX errors that are unrecoverable
+                in 400..499 -> {
+                    val errorCode = jsonResponse["code"]?.jsonPrimitive?.intOrNull
+                    val errorText = jsonResponse["code"]?.jsonPrimitive?.contentOrNull
+                    // Filter out client-side "timeout" related unrecoverable failures
+                    if (errorCode == 1999 || errorText == "requestTimedOut") {
                         return@transform FailureNode(ApiException(statusCode, body))
                     }
+                    // Filter our "PingOne Authentication Connector" unrecoverable failures
+                    val connectorId = jsonResponse["connectorId"]?.jsonPrimitive?.content
+                    if (connectorId == "pingOneAuthenticationConnector") {
+                        val capabilityName = jsonResponse["capabilityName"]?.jsonPrimitive?.content
+                        if (capabilityName in listOf("returnSuccessResponseRedirect", "setSession")) {
+                            return@transform FailureNode(ApiException(statusCode, body))
+                        }
+                    }
+                    // If we're still here, we have a 4XX failure that should be recoverable
+                    return@transform ErrorNode(jsonResponse, message)
                 }
-            }
-            catch (e: Exception) {
-                // Any other unknown errors as unrecoverable failures
-                return@transform FailureNode(ApiException(statusCode, e.message ?: "Unknown error"))
+                // Handle success (2XX) responses
+                200 -> {
+                    // Filter out 2XX errors with 'failure' status
+                    if (jsonResponse["status"]?.jsonPrimitive?.content == "FAILED") {
+                        return@transform FailureNode(ApiException(statusCode, body))
+                    }
+
+                    // Filter out 2XX errors with error object
+                    val error = jsonResponse["error"]?.jsonObject
+                    if (error.isNullOrEmpty().not()) {
+                        return@transform FailureNode(ApiException(HttpStatusCode.OK.value, body))
+                    }
+                    return@transform transform(this, workflow, jsonResponse)
+                }
+                else -> {
+                    // 5XX errors are treated as unrecoverable failures
+                    return@transform FailureNode(ApiException(statusCode, body))
+                }
             }
 
         }
