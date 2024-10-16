@@ -51,3 +51,4 @@ include(":external-idp")
 include(":foundation:testrail")
 
 include(":samples:app")
+include(":samples:journeyapp")

@@ -84,35 +84,10 @@ fun AuthApp() {
                                 }
                             },
                             actions = {
-                                when (current) {
-                                    Orchestrator.JOURNEY -> {
-                                        Icon(Icons.Filled.Bolt, "")
-                                    }
-
-                                    Orchestrator.DAVINCI -> {
-                                        Icon(Icons.Filled.RocketLaunch, "")
-                                    }
-
-                                    Orchestrator.CENTRALIZE -> {
-                                        Icon(Icons.Filled.OpenInBrowser, "")
-                                    }
-                                }
-
+                                Icon(Icons.Filled.RocketLaunch, "")
                                 IconButton(onClick = {
                                     logoutViewModel.logout {
-                                        when (current) {
-                                            Orchestrator.JOURNEY -> navController.navigate(
-                                                Destinations.LAUNCH_ROUTE
-                                            )
-
-                                            Orchestrator.DAVINCI -> navController.navigate(
-                                                Destinations.DAVINCI
-                                            )
-
-                                            Orchestrator.CENTRALIZE -> navController.navigate(
-                                                Destinations.CENTRALIZE_ROUTE
-                                            )
-                                        }
+                                        navController.navigate(Destinations.DAVINCI)
                                     }
                                 }) {
                                     Icon(Icons.AutoMirrored.Filled.Logout, "Logout")

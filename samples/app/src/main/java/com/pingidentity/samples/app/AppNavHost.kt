@@ -8,19 +8,13 @@
 package com.pingidentity.samples.app
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import com.pingidentity.samples.app.centralize.Centralize
 import com.pingidentity.samples.app.centralize.CentralizeLoginViewModel
 import com.pingidentity.samples.app.davinci.DaVinci
-import com.pingidentity.samples.app.journey.Journey
-import com.pingidentity.samples.app.journey.JourneyRoute
-import com.pingidentity.samples.app.journey.JourneyViewModel
 import com.pingidentity.samples.app.token.Token
 import com.pingidentity.samples.app.userprofile.UserProfile
 import com.pingidentity.samples.app.userprofile.UserProfileViewModel
@@ -49,28 +43,6 @@ fun AppNavHost(
         composable(Destinations.CENTRALIZE_ROUTE) {
             val centralizeLoginViewModel = viewModel<CentralizeLoginViewModel>()
             Centralize(centralizeLoginViewModel)
-        }
-        composable(Destinations.LAUNCH_ROUTE) {
-            val preferenceViewModel = viewModel<PreferenceViewModel>(
-                factory = PreferenceViewModel.factory(LocalContext.current)
-            )
-            JourneyRoute(
-                preferenceViewModel = preferenceViewModel,
-                onSubmit = { journeyName ->
-                    navController.navigate(Destinations.JOURNEY_ROUTE + "/$journeyName")
-                })
-        }
-        composable(Destinations.JOURNEY_ROUTE + "/{name}", arguments = listOf(
-            navArgument("name") { type = NavType.StringType }
-        )) {
-            it.arguments?.getString("name")?.apply {
-                val journeyViewModel = viewModel<JourneyViewModel>(
-                    factory = JourneyViewModel.factory(this)
-                )
-                Journey(journeyViewModel) {
-                    navController.navigate(Destinations.USER_INFO)
-                }
-            }
         }
     }
 }

@@ -5,7 +5,7 @@
  * of the MIT license. See the LICENSE file for details.
  */
 
-package com.pingidentity.samples.app.journey
+package com.pingidentity.samples.journeyapp.journey
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -16,8 +16,6 @@ import com.pingidentity.journey.start
 import com.pingidentity.logger.Logger
 import com.pingidentity.logger.STANDARD
 import com.pingidentity.orchestrate.ContinueNode
-import com.pingidentity.samples.app.Orchestrator
-import com.pingidentity.samples.app.current
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -87,7 +85,6 @@ class JourneyViewModel(private var journeyName: String) : ViewModel() {
     }
 
     fun start() {
-        current = Orchestrator.JOURNEY
 
         loading.update {
             true

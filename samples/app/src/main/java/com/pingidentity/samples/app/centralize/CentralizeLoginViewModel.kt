@@ -13,8 +13,8 @@ import androidx.lifecycle.viewModelScope
 import com.pingidentity.utils.Result
 import com.pingidentity.oidc.OidcClient
 import com.pingidentity.oidc.agent.browser
-import com.pingidentity.samples.app.Orchestrator
-import com.pingidentity.samples.app.current
+import com.pingidentity.samples.app.Mode
+import com.pingidentity.samples.app.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -77,9 +77,8 @@ class CentralizeLoginViewModel : ViewModel() {
         private set
 
     fun login() {
-        current = Orchestrator.CENTRALIZE
-
         viewModelScope.launch {
+            User.current(Mode.CENTRALIZE)
             when (val result = oidcClient.token()) {
                 is Result.Failure -> {
                     state.update {

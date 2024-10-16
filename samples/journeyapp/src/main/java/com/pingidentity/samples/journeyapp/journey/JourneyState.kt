@@ -5,7 +5,7 @@
  * of the MIT license. See the LICENSE file for details.
  */
 
-package com.pingidentity.samples.app.journey
+package com.pingidentity.samples.journeyapp.journey
 
 import com.pingidentity.orchestrate.Node
 

@@ -9,9 +9,14 @@ package com.pingidentity.journey
 
 import com.pingidentity.android.ModuleInitializer
 import com.pingidentity.journey.callback.ChoiceCallback
+import com.pingidentity.journey.callback.ConfirmationCallback
+import com.pingidentity.journey.callback.ConsentMappingCallback
 import com.pingidentity.journey.callback.NameCallback
 import com.pingidentity.journey.callback.PasswordCallback
 import com.pingidentity.journey.callback.PollingWaitCallback
+import com.pingidentity.journey.callback.SelectIdPCallback
+import com.pingidentity.journey.callback.TextInputCallback
+import com.pingidentity.journey.callback.TextOutputCallback
 import com.pingidentity.journey.plugin.CallbackFactory
 
 /**
@@ -25,12 +30,14 @@ class CallbackRegistry : ModuleInitializer() {
      * It registers two callbacks: NameCallback and PasswordCallback.
      */
     override fun initialize() {
-        // Register NameCallback with the CallbackFactory
         CallbackFactory.register("NameCallback", ::NameCallback)
-
-        // Register PasswordCallback with the CallbackFactory
         CallbackFactory.register("PasswordCallback", ::PasswordCallback)
         CallbackFactory.register("PollingWaitCallback", ::PollingWaitCallback)
         CallbackFactory.register("ChoiceCallback", ::ChoiceCallback)
+        CallbackFactory.register("ConfirmationCallback", ::ConfirmationCallback)
+        CallbackFactory.register("ConsentMappingCallback", ::ConsentMappingCallback)
+        CallbackFactory.register("TextInputCallback", ::TextInputCallback)
+        CallbackFactory.register("TextOutputCallback", ::TextOutputCallback)
+        CallbackFactory.register("SelectIdPCallback", ::SelectIdPCallback)
     }
 }

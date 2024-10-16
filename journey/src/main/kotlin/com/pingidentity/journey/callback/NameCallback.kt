@@ -20,7 +20,7 @@ class NameCallback : AbstractCallback() {
 
     override fun onAttribute(name: String, value: JsonElement) {
         when (name) {
-            "prompt" -> this.prompt = value.jsonPrimitive.content ?: ""
+            "prompt" -> this.prompt = value.jsonPrimitive.content
         }
     }
 

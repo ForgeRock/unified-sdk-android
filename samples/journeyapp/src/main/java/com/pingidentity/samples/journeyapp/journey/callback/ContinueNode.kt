@@ -5,7 +5,7 @@
  * of the MIT license. See the LICENSE file for details.
  */
 
-package com.pingidentity.samples.app.journey.callback
+package com.pingidentity.samples.journeyapp.journey.callback
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -67,7 +67,7 @@ fun ContinueNode(
             .padding(4.dp)
             .fillMaxWidth(),
     ) {
-        var hasAction = false
+        val hasAction = false
 
         continueNode.callbacks.forEach {
             when (it) {

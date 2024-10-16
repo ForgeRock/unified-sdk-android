@@ -9,9 +9,8 @@ package com.pingidentity.samples.app.userprofile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.pingidentity.utils.Result
-import com.pingidentity.oidc.OidcError
 import com.pingidentity.samples.app.User
+import com.pingidentity.utils.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -22,21 +21,16 @@ class UserProfileViewModel : ViewModel() {
 
     fun userinfo() {
         viewModelScope.launch {
-            User.user()?.userinfo(false).also {
-                when (it) {
+            User.user()?.let { user ->
+                when (val result = user.userinfo(false)) {
                     is Result.Failure ->
                         state.update { s ->
-                            s.copy(user = null, error = it.value)
+                            s.copy(user = null, error = result.value)
                         }
 
                     is Result.Success ->
                         state.update { s ->
-                            s.copy(user = it.value, error = null)
-                        }
-
-                    null ->
-                        state.update { s ->
-                            s.copy(user = null, error = OidcError.Unknown(Throwable("No user found.")))
+                            s.copy(user = result.value, error = null)
                         }
                 }
             }
