@@ -5,7 +5,7 @@
  * of the MIT license. See the LICENSE file for details.
  */
 
-package com.pingidentity.samples.app.journey
+package com.pingidentity.samples.journeyapp.journey
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,9 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.pingidentity.samples.app.Orchestrator
-import com.pingidentity.samples.app.PreferenceViewModel
-import com.pingidentity.samples.app.current
+import com.pingidentity.samples.journeyapp.PreferenceViewModel
 
 @Composable
 fun JourneyRoute(
@@ -35,7 +33,6 @@ fun JourneyRoute(
 
     //Stateful Composable - state maintain when configuration change
     var journeyName by rememberSaveable {
-        current = Orchestrator.JOURNEY
         mutableStateOf(preferenceViewModel.getLastJourney())
     }
 

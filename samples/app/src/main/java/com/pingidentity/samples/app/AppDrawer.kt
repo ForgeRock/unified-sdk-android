@@ -48,8 +48,8 @@ fun AppDrawer(
 
     ModalDrawerSheet(
         modifier =
-            Modifier
-                .verticalScroll(scroll),
+        Modifier
+            .verticalScroll(scroll),
     ) {
         Logo(
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
@@ -60,16 +60,6 @@ fun AppDrawer(
             icon = { Icon(Icons.Filled.RocketLaunch, null) },
             onClick = {
                 navigateTo(DAVINCI)
-                closeDrawer()
-            },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-        )
-        NavigationDrawerItem(
-            label = { Text("Launch Journey") },
-            selected = false,
-            icon = { Icon(Icons.Filled.Bolt, null) },
-            onClick = {
-                navigateTo(LAUNCH_ROUTE)
                 closeDrawer()
             },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
@@ -111,11 +101,7 @@ fun AppDrawer(
             icon = { Icon(Icons.AutoMirrored.Filled.Logout, null) },
             onClick = {
                 logoutViewModel.logout {
-                    when(current) {
-                        Orchestrator.DAVINCI -> navigateTo(DAVINCI)
-                        Orchestrator.JOURNEY -> navigateTo(LAUNCH_ROUTE)
-                        Orchestrator.CENTRALIZE -> navigateTo(CENTRALIZE_ROUTE)
-                    }
+                    navigateTo(DAVINCI)
                 }
                 closeDrawer()
             },
@@ -128,18 +114,19 @@ fun AppDrawer(
 private fun Logo(modifier: Modifier) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .background(colorResource(id = R.color.black))
-                .then(modifier),
+        Modifier
+            .fillMaxWidth()
+            .background(colorResource(id = R.color.black))
+            .then(modifier),
     ) {
         Icon(
-            painterResource(R.drawable.ping_logo),
+            painterResource(R.drawable.logo_davinci_white),
             contentDescription = null,
             modifier =
-                Modifier
-                    .height(100.dp).padding(8.dp)
-                    .then(modifier),
+            Modifier
+                .height(100.dp)
+                .padding(8.dp)
+                .then(modifier),
             tint = Color.Unspecified,
         )
     }

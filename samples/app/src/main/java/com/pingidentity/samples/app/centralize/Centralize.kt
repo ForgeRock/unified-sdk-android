@@ -29,8 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.pingidentity.samples.app.Orchestrator
-import com.pingidentity.samples.app.current
 import com.pingidentity.samples.app.json
 import kotlinx.serialization.encodeToString
 

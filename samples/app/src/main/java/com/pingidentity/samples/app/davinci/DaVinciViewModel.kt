@@ -14,8 +14,8 @@ import com.pingidentity.davinci.module.Oidc
 import com.pingidentity.logger.Logger
 import com.pingidentity.logger.STANDARD
 import com.pingidentity.orchestrate.ContinueNode
-import com.pingidentity.samples.app.Orchestrator
-import com.pingidentity.samples.app.current
+import com.pingidentity.samples.app.Mode
+import com.pingidentity.samples.app.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -94,12 +94,11 @@ class DaVinciViewModel : ViewModel() {
     }
 
     fun start() {
-        current = Orchestrator.DAVINCI
-
         loading.update {
             true
         }
         viewModelScope.launch {
+            User.current(Mode.DAVINCI)
 
             val next = daVinci.start()
 

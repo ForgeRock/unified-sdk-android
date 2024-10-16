@@ -18,7 +18,7 @@ android {
     defaultConfig {
         applicationId = "com.pingidentity.samples.app"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -54,9 +54,9 @@ android {
 
 dependencies {
 
+    implementation(project(":foundation:android"))
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
-    implementation(project(":journey"))
 
     implementation(project(":davinci"))
     //implementation("com.pingidentity.sdks:davinci:0.9.0-SNAPSHOT")
@@ -66,6 +66,8 @@ dependencies {
 
     //App Auth is only required for Centralize Login with oidc module
     implementation(libs.appauth)
+
+    implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.compose.ui)
     implementation(libs.compose.material3)

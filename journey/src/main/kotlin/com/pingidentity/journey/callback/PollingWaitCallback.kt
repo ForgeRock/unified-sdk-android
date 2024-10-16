@@ -28,7 +28,7 @@ class PollingWaitCallback : AbstractCallback() {
 
     override fun onAttribute(name: String, value: JsonElement) {
         when (name) {
-            "message" -> this.message = value.jsonPrimitive.content ?: ""
+            "message" -> this.message = value.jsonPrimitive.content
             "waitTime" -> this.waitTime = value.jsonPrimitive.int
         }
     }

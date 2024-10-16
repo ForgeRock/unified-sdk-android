@@ -5,7 +5,7 @@
  * of the MIT license. See the LICENSE file for details.
  */
 
-package com.pingidentity.samples.app.journey
+package com.pingidentity.samples.journeyapp.journey
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
@@ -41,8 +41,8 @@ import com.pingidentity.orchestrate.ContinueNode
 import com.pingidentity.orchestrate.ErrorNode
 import com.pingidentity.orchestrate.FailureNode
 import com.pingidentity.orchestrate.SuccessNode
-import com.pingidentity.samples.app.R
-import com.pingidentity.samples.app.journey.callback.ContinueNode
+import com.pingidentity.samples.journeyapp.R
+import com.pingidentity.samples.journeyapp.journey.callback.ContinueNode
 
 @Composable
 fun Journey(
