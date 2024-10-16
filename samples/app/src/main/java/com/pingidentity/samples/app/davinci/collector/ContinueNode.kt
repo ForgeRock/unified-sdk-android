@@ -95,10 +95,9 @@ fun ContinueNode(
                 }
 
                 is TextCollector -> Text(it, onNodeUpdated)
-
-                is IdpCollector -> SocialLoginButton(it, onStart, onNext)
             }
         }
+
         if (!hasAction) {
             Button(
                 modifier = Modifier.align(Alignment.End),
