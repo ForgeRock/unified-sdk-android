@@ -30,11 +30,11 @@ import com.pingidentity.davinci.module.description
 import com.pingidentity.davinci.module.name
 import com.pingidentity.davinci.plugin.collectors
 import com.pingidentity.idp.IdpCollector
-import com.pingidentity.orchestrate.Connector
+import com.pingidentity.orchestrate.ContinueNode
 
 @Composable
-fun Connector(
-    connector: Connector,
+fun ContinueNode(
+    continueNode: ContinueNode,
     onNodeUpdated: () -> Unit,
     onStart: () -> Unit,
     onNext: () -> Unit,
@@ -47,7 +47,7 @@ fun Connector(
     ) {
         Spacer(Modifier.width(8.dp))
         Text(
-            text = connector.name,
+            text = continueNode.name,
             Modifier
                 .wrapContentWidth(Alignment.CenterHorizontally)
                 .weight(1f),
@@ -63,7 +63,7 @@ fun Connector(
     ) {
         Spacer(Modifier.width(8.dp))
         Text(
-            text = connector.description,
+            text = continueNode.description,
             Modifier
                 .wrapContentWidth(Alignment.CenterHorizontally)
                 .weight(1f),
@@ -79,7 +79,7 @@ fun Connector(
     ) {
         var hasAction = false
 
-        connector.collectors.forEach {
+        continueNode.collectors.forEach {
             when (it) {
                 is FlowCollector -> {
                     hasAction = true

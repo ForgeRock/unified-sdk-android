@@ -19,11 +19,11 @@ import androidx.compose.ui.unit.dp
 import com.pingidentity.journey.callback.NameCallback
 import com.pingidentity.journey.callback.PasswordCallback
 import com.pingidentity.journey.callback.callbacks
-import com.pingidentity.orchestrate.Connector
+import com.pingidentity.orchestrate.ContinueNode
 
 @Composable
-fun Connector(
-    connector: Connector,
+fun ContinueNode(
+    continueNode: ContinueNode,
     onNodeUpdated: () -> Unit,
     onNext: () -> Unit,
 ) {
@@ -69,7 +69,7 @@ fun Connector(
     ) {
         var hasAction = false
 
-        connector.callbacks.forEach {
+        continueNode.callbacks.forEach {
             when (it) {
                 is NameCallback -> {
                     NameCallback(it, onNodeUpdated)

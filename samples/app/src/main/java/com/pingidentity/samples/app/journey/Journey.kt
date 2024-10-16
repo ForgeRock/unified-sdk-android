@@ -37,12 +37,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.pingidentity.orchestrate.Connector
-import com.pingidentity.orchestrate.Error
-import com.pingidentity.orchestrate.Failure
-import com.pingidentity.orchestrate.Success
+import com.pingidentity.orchestrate.ContinueNode
+import com.pingidentity.orchestrate.ErrorNode
+import com.pingidentity.orchestrate.FailureNode
+import com.pingidentity.orchestrate.SuccessNode
 import com.pingidentity.samples.app.R
-import com.pingidentity.samples.app.journey.callback.Connector
+import com.pingidentity.samples.app.journey.callback.ContinueNode
 
 @Composable
 fun Journey(
@@ -75,7 +75,7 @@ fun Journey(
     state: JourneyState,
     loading: Boolean,
     onNodeUpdated: () -> Unit,
-    onNext: (Connector) -> Unit,
+    onNext: (ContinueNode) -> Unit,
     onSuccess: (() -> Unit)?,
 ) {
     Box(
@@ -95,23 +95,23 @@ fun Journey(
             Logo(modifier = Modifier)
 
             when (val node = state.node) {
-                is Connector -> {
+                is ContinueNode -> {
                     Render(node = node, onNodeUpdated) {
                         onNext(node)
                     }
                 }
 
-                is Error -> {
+                is FailureNode -> {
                     Log.e("Journey", node.cause.message, node.cause)
                     Render(node = node)
                 }
 
-                is Failure -> {
+                is ErrorNode -> {
                     // TODO For Journey, we many not need to render the Failure node
                     Render(node)
                 }
 
-                is Success -> {
+                is SuccessNode -> {
                     LaunchedEffect(true) {
                         onSuccess?.let { onSuccess() }
                     }
@@ -124,7 +124,7 @@ fun Journey(
 }
 
 @Composable
-fun Render(node: Error) {
+fun Render(node: FailureNode) {
     Row(
         modifier =
         Modifier
@@ -162,7 +162,7 @@ fun Render(node: Error) {
 }
 
 @Composable
-fun Render(node: Failure) {
+fun Render(node: ErrorNode) {
     Row(
         modifier =
         Modifier
@@ -201,11 +201,11 @@ fun Render(node: Failure) {
 
 @Composable
 fun Render(
-    node: Connector,
+    node: ContinueNode,
     onNodeUpdated: () -> Unit,
     onNext: () -> Unit,
 ) {
-    Connector(node, onNodeUpdated, onNext)
+    ContinueNode(node, onNodeUpdated, onNext)
 }
 
 @Composable

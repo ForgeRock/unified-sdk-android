@@ -13,7 +13,7 @@ import com.pingidentity.davinci.DaVinci
 import com.pingidentity.davinci.module.Oidc
 import com.pingidentity.logger.Logger
 import com.pingidentity.logger.STANDARD
-import com.pingidentity.orchestrate.Connector
+import com.pingidentity.orchestrate.ContinueNode
 import com.pingidentity.samples.app.Orchestrator
 import com.pingidentity.samples.app.current
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -78,7 +78,7 @@ class DaVinciViewModel : ViewModel() {
         start()
     }
 
-    fun next(current: Connector) {
+    fun next(current: ContinueNode) {
         loading.update {
             true
         }

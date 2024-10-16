@@ -47,10 +47,10 @@ class Workflow(val config: WorkflowConfig) {
      */
     internal val init = mutableListOf<suspend () -> Unit>()
     internal val start = mutableListOf<suspend FlowContext.(Request) -> Request>()
-    internal val next = mutableListOf<suspend FlowContext.(Connector, Request) -> Request>()
+    internal val next = mutableListOf<suspend FlowContext.(ContinueNode, Request) -> Request>()
     internal val response = mutableListOf<suspend FlowContext.(Response) -> Unit>()
     internal val node = mutableListOf<suspend FlowContext.(Node) -> Node>()
-    internal val success = mutableListOf<suspend FlowContext.(Success) -> Success>()
+    internal val success = mutableListOf<suspend FlowContext.(SuccessNode) -> SuccessNode>()
     internal val signOff = mutableListOf<suspend (Request) -> Request>()
 
     // Transform response to Node, we can only have one transform
@@ -120,7 +120,7 @@ class Workflow(val config: WorkflowConfig) {
      */
     internal suspend fun next(
         context: FlowContext,
-        current: Connector,
+        current: ContinueNode,
     ): Node = lock.withLock {
         return catch {
             config.logger.i("Next...")
@@ -163,7 +163,7 @@ class Workflow(val config: WorkflowConfig) {
         context: FlowContext,
         node: Node,
     ): Node {
-        return if (node is Success) {
+        return if (node is SuccessNode) {
             success.asFlow().scan(node) { result, value -> context.value(result) }.last()
         } else {
             node

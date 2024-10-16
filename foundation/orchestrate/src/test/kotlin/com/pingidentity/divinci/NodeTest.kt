@@ -9,13 +9,13 @@ package com.pingidentity.divinci
 
 import com.pingidentity.orchestrate.Action
 import com.pingidentity.orchestrate.Closeable
-import com.pingidentity.orchestrate.Connector
+import com.pingidentity.orchestrate.ContinueNode
 import com.pingidentity.orchestrate.EmptySession
-import com.pingidentity.orchestrate.Error
+import com.pingidentity.orchestrate.FailureNode
 import com.pingidentity.orchestrate.FlowContext
 import com.pingidentity.orchestrate.Node
 import com.pingidentity.orchestrate.Request
-import com.pingidentity.orchestrate.Success
+import com.pingidentity.orchestrate.SuccessNode
 import com.pingidentity.orchestrate.Workflow
 import com.pingidentity.orchestrate.catch
 import com.pingidentity.testrail.TestRailCase
@@ -42,14 +42,14 @@ class NodeTest {
     fun `catch should return Error node for thrown exception`() {
         val exception = RuntimeException("Test exception")
         val node = catch { throw exception }
-        assertTrue(node is Error)
+        assertTrue(node is FailureNode)
         assertEquals(exception, node.cause)
     }
 
     @TestRailCase(22137)
     @Test
     fun `catch should return Node for successful block execution`() {
-        val successNode = Success(session = EmptySession)
+        val successNode = SuccessNode(session = EmptySession)
         val node = catch { successNode }
         assertEquals(successNode, node)
     }
@@ -62,14 +62,14 @@ class NodeTest {
         val mockNode = mockk<Node>()
         coEvery { mockWorkflow.next(mockContext, any()) } returns mockNode
 
-        val connector = object : Connector(mockContext, mockWorkflow, buildJsonObject {}, emptyList()) {
+        val connector = object : ContinueNode(mockContext, mockWorkflow, buildJsonObject {}, emptyList()) {
             override fun asRequest(): Request {
                 return mockk()
             }
         }
 
-        val nextNode = connector.next()
-        assertEquals(mockNode, nextNode)
+        val continueNode = connector.next()
+        assertEquals(mockNode, continueNode)
     }
 
     @TestRailCase(22139)
@@ -80,7 +80,7 @@ class NodeTest {
             }
         }
         val closeableAction = spyk(o)
-        val connector = object : Connector(mockk(), mockk(), buildJsonObject {}, listOf(closeableAction)) {
+        val connector = object : ContinueNode(mockk(), mockk(), buildJsonObject {}, listOf(closeableAction)) {
             override fun asRequest(): Request {
                 return mockk()
             }

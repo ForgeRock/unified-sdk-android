@@ -11,16 +11,16 @@ import com.pingidentity.exception.ApiException
 import com.pingidentity.journey.journeyConfig
 import com.pingidentity.journey.plugin.Callback
 import com.pingidentity.journey.plugin.CallbackFactory
-import com.pingidentity.orchestrate.Connector
+import com.pingidentity.orchestrate.ContinueNode
 import com.pingidentity.orchestrate.EmptySession
-import com.pingidentity.orchestrate.Error
-import com.pingidentity.orchestrate.Failure
+import com.pingidentity.orchestrate.ErrorNode
+import com.pingidentity.orchestrate.FailureNode
 import com.pingidentity.orchestrate.FlowContext
 import com.pingidentity.orchestrate.Module
 import com.pingidentity.orchestrate.Node
 import com.pingidentity.orchestrate.Request
 import com.pingidentity.orchestrate.Session
-import com.pingidentity.orchestrate.Success
+import com.pingidentity.orchestrate.SuccessNode
 import com.pingidentity.orchestrate.Workflow
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -37,7 +37,7 @@ internal val NodeTransform =
 
             when (it.status()) {
                 400 -> {
-                    failure(it.body().asJson())
+                    error(it.body().asJson())
                 }
 
                 200 -> {
@@ -45,7 +45,7 @@ internal val NodeTransform =
                 }
 
                 else -> {
-                    Error(ApiException(it.status(), it.body()))
+                    FailureNode(ApiException(it.status(), it.body()))
                 }
             }
         }
@@ -55,8 +55,8 @@ private fun String.asJson(): JsonObject {
     return Json.parseToJsonElement(this).jsonObject
 }
 
-private fun failure(json: JsonObject): Failure {
-    return Failure(json, json["message"]?.jsonPrimitive?.content ?: "" )
+private fun error(json: JsonObject): ErrorNode {
+    return ErrorNode(json, json["message"]?.jsonPrimitive?.content ?: "" )
 }
 
 private fun transform(
@@ -69,7 +69,7 @@ private fun transform(
         json["callbacks"]?.jsonArray?.let {
             callbacks.addAll(CallbackFactory.callback(it))
         }
-        return object : Connector(context, workflow, json, callbacks) {
+        return object : ContinueNode(context, workflow, json, callbacks) {
             private fun asJson(): JsonObject {
                 return buildJsonObject {
                     put("authId", json["authId"]?.jsonPrimitive?.content ?: "")
@@ -94,7 +94,7 @@ private fun transform(
         }
     }
     if ("tokenId" in json && json["tokenId"]?.jsonPrimitive?.content?.isNotEmpty() == true) {
-        return Success(json,
+        return SuccessNode(json,
             object : Session {
                 override fun value(): String {
                     return json["tokenId"]?.jsonPrimitive?.content ?: ""
@@ -102,6 +102,6 @@ private fun transform(
             }
         )
     } else {
-        return Success(json, EmptySession)
+        return SuccessNode(json, EmptySession)
     }
 }

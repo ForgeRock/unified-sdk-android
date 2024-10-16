@@ -10,13 +10,12 @@ package com.pingidentity.samples.app.journey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.pingidentity.davinci.user
 import com.pingidentity.journey.Journey
 import com.pingidentity.journey.module.Oidc
 import com.pingidentity.journey.start
 import com.pingidentity.logger.Logger
 import com.pingidentity.logger.STANDARD
-import com.pingidentity.orchestrate.Connector
+import com.pingidentity.orchestrate.ContinueNode
 import com.pingidentity.samples.app.Orchestrator
 import com.pingidentity.samples.app.current
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,7 +71,7 @@ class JourneyViewModel(private var journeyName: String) : ViewModel() {
         start()
     }
 
-    fun next(node: Connector) {
+    fun next(node: ContinueNode) {
         loading.update {
             true
         }

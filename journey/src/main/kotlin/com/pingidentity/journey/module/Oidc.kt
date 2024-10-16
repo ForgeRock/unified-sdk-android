@@ -15,7 +15,7 @@ import com.pingidentity.oidc.OidcClient
 import com.pingidentity.oidc.OidcClientConfig
 import com.pingidentity.oidc.OidcUser
 import com.pingidentity.orchestrate.Module
-import com.pingidentity.orchestrate.Success
+import com.pingidentity.orchestrate.SuccessNode
 import kotlin.collections.set
 
 private const val OIDC_CLIENT_CONFIG = "com.pingidentity.journey.OIDC_CLIENT_CONFIG"
@@ -40,7 +40,7 @@ val Oidc =
         }
 
         success { success ->
-            Success(success.input,
+            SuccessNode(success.input,
                 prepareUser(
                     workflow,
                     OidcUser(workflow.oidcClientConfig()),
