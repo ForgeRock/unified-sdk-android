@@ -58,7 +58,6 @@ inline fun <reified T : Any> EncryptedSerializer(
             output: OutputStream,
         ) {
             t?.let {
-                //TODO what if exception is thrown during encryption?
                 //Do we want to ignore it or throw it?
                 output.write(
                     encryptor.encrypt(

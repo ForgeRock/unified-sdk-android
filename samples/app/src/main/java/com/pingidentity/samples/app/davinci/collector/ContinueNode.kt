@@ -79,6 +79,12 @@ fun ContinueNode(
     ) {
         var hasAction = false
 
+        //TODO: Integration Point. STEP 5
+        // Intermediate step in the Davinci Flow. The ContinueNode is a node that is used to
+        // continue the flow. It can have multiple collectors that are used to collect user input.
+        // Render the UI for each collector that are part of the ContinueNode.
+
+        /*
         continueNode.collectors.forEach {
             when (it) {
                 is FlowCollector -> {
@@ -95,10 +101,9 @@ fun ContinueNode(
                 }
 
                 is TextCollector -> Text(it, onNodeUpdated)
-
-                is IdpCollector -> SocialLoginButton(it, onStart, onNext)
             }
         }
+         */
         if (!hasAction) {
             Button(
                 modifier = Modifier.align(Alignment.End),

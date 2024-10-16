@@ -104,6 +104,9 @@ fun DaVinci(
         ) {
             Logo(modifier = Modifier)
 
+            //TODO: Integration Point. STEP 4
+            // When the state is updated, depends on the Node Type, render the current node
+            /*
             when (val node = state.node) {
                 is ContinueNode -> {
                     Render(node = node, onNodeUpdated, onStart) {
@@ -134,6 +137,7 @@ fun DaVinci(
 
                 else -> {}
             }
+             */
         }
     }
 }

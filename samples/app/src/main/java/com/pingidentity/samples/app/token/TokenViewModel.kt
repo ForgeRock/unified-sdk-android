@@ -22,8 +22,12 @@ class TokenViewModel : ViewModel() {
 
     fun accessToken() {
         viewModelScope.launch {
+            //TODO: Integration Point. STEP 6
+            // Retrieve the access token
+
+            /*
             User.user()?.let {
-                when (val result = it.token()) {
+               when (val result = it.token()) {
                     is Failure -> {
                         state.update {
                             it.copy(token = null, error = result.value)
@@ -41,6 +45,7 @@ class TokenViewModel : ViewModel() {
                     it.copy(token = null, error = null)
                 }
             }
+             */
         }
     }
 

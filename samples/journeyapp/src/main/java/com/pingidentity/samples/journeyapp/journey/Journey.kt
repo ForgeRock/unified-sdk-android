@@ -107,7 +107,6 @@ fun Journey(
                 }
 
                 is ErrorNode -> {
-                    // TODO For Journey, we many not need to render the Failure node
                     Render(node)
                 }
 

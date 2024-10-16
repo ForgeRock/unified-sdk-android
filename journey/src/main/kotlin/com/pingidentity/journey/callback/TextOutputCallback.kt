@@ -24,7 +24,7 @@ class TextOutputCallback : AbstractCallback() {
         }
     }
 
-    //TODO Make sure not to post back javascript
+    //Make sure not to post back javascript
     override fun asJson(): JsonObject {
         if (messageType == 4) {
             return buildJsonObject {};

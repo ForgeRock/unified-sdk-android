@@ -21,6 +21,10 @@ class UserProfileViewModel : ViewModel() {
 
     fun userinfo() {
         viewModelScope.launch {
+            //TODO: Integration Point. STEP 7
+            // Retrieve the user info
+
+            /*
             User.user()?.let { user ->
                 when (val result = user.userinfo(false)) {
                     is Result.Failure ->
@@ -34,6 +38,7 @@ class UserProfileViewModel : ViewModel() {
                         }
                 }
             }
+             */
         }
     }
 }
