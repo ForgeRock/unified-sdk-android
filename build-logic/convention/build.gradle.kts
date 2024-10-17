@@ -5,7 +5,9 @@
  * of the MIT license. See the LICENSE file for details.
  */
 
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.UsesKotlinJavaToolchain
 
 plugins {
     `kotlin-dsl`
@@ -17,10 +19,6 @@ dependencies {
     compileOnly(libs.dokka.gradlePlugin)
     //https://github.com/gradle/gradle/issues/15383
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
-}
-
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
 }
 
 gradlePlugin {

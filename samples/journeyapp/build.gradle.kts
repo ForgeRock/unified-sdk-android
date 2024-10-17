@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.pingidentity.samples.journeyapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.pingidentity.samples.journeyapp"
@@ -35,6 +35,7 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+
 }
 
 dependencies {
