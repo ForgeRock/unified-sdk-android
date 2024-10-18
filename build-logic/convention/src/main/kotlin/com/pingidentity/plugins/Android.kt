@@ -9,7 +9,6 @@ package com.pingidentity.plugins
 
 import com.android.build.api.dsl.CommonExtension
 import org.gradle.accessors.dm.LibrariesForLibs
-import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.the
 
@@ -22,11 +21,6 @@ fun Project.configureKotlinAndroid(extension: CommonExtension<*, *, *, *, *, *>)
         defaultConfig {
             minSdk = libs.versions.minSdk.get().toInt()
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        }
-
-        compileOptions {
-            sourceCompatibility = JavaVersion.toVersion(libs.versions.jvmTarget.get())
-            targetCompatibility = JavaVersion.toVersion(libs.versions.jvmTarget.get())
         }
 
         testOptions {

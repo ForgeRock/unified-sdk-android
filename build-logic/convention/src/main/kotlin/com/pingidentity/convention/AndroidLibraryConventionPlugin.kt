@@ -7,6 +7,7 @@
 package com.pingidentity.convention
 
 import com.android.build.gradle.LibraryExtension
+import com.pingidentity.plugins.configureJava
 import com.pingidentity.plugins.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -23,6 +24,8 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 configureKotlinAndroid(this)
                 namespace = "com.pingidentity.${project.name.replace("-", ".")}"
             }
+
+            configureJava()
         }
     }
 }

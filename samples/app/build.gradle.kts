@@ -13,7 +13,7 @@ plugins {
 
 android {
     namespace = "com.pingidentity.samples.app"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.pingidentity.samples.app"
