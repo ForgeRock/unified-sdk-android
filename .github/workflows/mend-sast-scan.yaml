@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone the repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.head_sha || github.event.pull_request.head.sha }}
           repository: ${{ inputs.head_repo || github.event.pull_request.head.repo.full_name }}
@@ -39,7 +39,7 @@ jobs:
 
       - name: Download and cache the Mend CLI executable
         id: cache-mend
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         env:
           mend-cache-name: cache-mend-executable
         with:
@@ -141,7 +141,7 @@ jobs:
 
       # Step 2: Publish Mend SAST Check
       - name: Publish Mend SAST Check
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const fs = require('fs');
@@ -162,7 +162,7 @@ jobs:
             });
 
       - name: Upload SAST scan report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: mend-sast-report

@@ -68,7 +68,7 @@ jobs:
           done
 
       - name: Upload raw BrowserStack build JSON
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: browserstack-push-build-result
           path: browserstack-push-build-result.json
