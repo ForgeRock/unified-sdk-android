@@ -89,6 +89,18 @@ allprojects {
             force("com.google.protobuf:protobuf-kotlin:4.29.2")
             force("com.google.protobuf:protobuf-javalite:4.29.2")
             force("com.google.protobuf:protobuf-kotlin-lite:4.29.2")
+            //Due to [CVE-2026-71497]:
+            // org.jsoup:jsoup:1.16.1, transitive runtime dependency of
+            // org.jetbrains.dokka:dokka-base:2.0.0 (build-time only, not shipped in the SDK).
+            force("org.jsoup:jsoup:1.23.2")
+            // Due to [CVE-2020-13956]:
+            // org.apache.httpcomponents:httpclient:4.5.6, transitive runtime dependency of
+            // org.jetbrains.dokka:dokka-base:2.0.0 (build-time only, not shipped in the SDK).
+            force("org.apache.httpcomponents:httpclient:4.5.13")
+            // Due to [CVE-2026-84939]:
+            // freemarker-2.3.32, transitive runtime dependency of
+            // org.jetbrains.dokka:dokka-base:2.0.0 (build-time only, not shipped in the SDK).
+            force("org.freemarker:freemarker:2.3.35")
         }
     }
 }
