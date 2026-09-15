@@ -42,10 +42,10 @@ buildscript {
     configurations.all {
         resolutionStrategy {
             // Force secure version of bouncy castle to address security vulnerabilities
-            // Fixes CVE-2025-14813 and CVE-2026-5598; targets build-toolchain classpath (lint-gradle)
-            force("org.bouncycastle:bcprov-jdk18on:1.84")
-            force("org.bouncycastle:bcpkix-jdk18on:1.84")
-            force("org.bouncycastle:bcutil-jdk18on:1.84")
+            // Fixes CVE-2026-8763; targets build-toolchain classpath (lint-gradle)
+            force("org.bouncycastle:bcprov-jdk18on:1.85")
+            force("org.bouncycastle:bcpkix-jdk18on:1.85")
+            force("org.bouncycastle:bcutil-jdk18on:1.85")
         }
     }
 }
@@ -64,15 +64,15 @@ allprojects {
             force("com.nimbusds:nimbus-jose-jwt:10.5")
 
             // Force secure version of bouncy castle to address security vulnerabilities
-            // Fixes CVE-2025-14813 and CVE-2026-5598; targets build-toolchain classpath (lint-gradle)
-            force("org.bouncycastle:bcprov-jdk18on:1.84")
-            force("org.bouncycastle:bcpkix-jdk18on:1.84")
-            force("org.bouncycastle:bcutil-jdk18on:1.84")
+            // Fixes CVE-2026-8763; targets build-toolchain classpath (lint-gradle)
+            force("org.bouncycastle:bcprov-jdk18on:1.85")
+            force("org.bouncycastle:bcpkix-jdk18on:1.85")
+            force("org.bouncycastle:bcutil-jdk18on:1.85")
 
-            // Updated to 2.18.8 per Mend SCA (CVE-2026-54512, CVE-2026-54513, CVE-2026-54514)
-            force("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.8")
-            force("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.18.8")
-            force("com.fasterxml.jackson.core:jackson-databind:2.18.8")
+            // Updated to 2.22.2 per Mend SCA vulnerability [CVE-2026-68494], [CVE-2026-54512], [CVE-2026-54513] from dokka project.
+            force("com.fasterxml.jackson.module:jackson-module-kotlin:2.22.2")
+            force("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.22.2")
+            force("com.fasterxml.jackson.core:jackson-databind:2.22.2")
 
             // Force secure version of netty-codec to address security vulnerabilities
             // Used transitively by com.android.tools.emulator:proto (build toolchain only)
